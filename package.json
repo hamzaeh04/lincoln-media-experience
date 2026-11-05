@@ -1,0 +1,12 @@
+{
+  "name": "lincoln-media-experience",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "voice": "node scripts/generate-voice.mjs",
+    "dev": "node server.mjs"
+  },
+  "devDependencies": {
+    "kokoro-js": "^1.2.1"
+  }
+}
