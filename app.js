@@ -32,13 +32,14 @@
   const bgUniforms = {
     uTime: { value: 0 }, uRes: { value: new THREE.Vector2(1, 1) }, uMouse: { value: new THREE.Vector2() },
     uColA: { value: new THREE.Color("#36e4d0") }, uColB: { value: new THREE.Color("#3b5bff") }, uLevel: { value: 0 },
+    uSite: { value: 0 }, // 0 = experience background, 1 = the website's plain near-black
   };
   const bgMat = new THREE.ShaderMaterial({
     uniforms: bgUniforms, depthTest: false, depthWrite: false,
     extensions: { derivatives: true },
     vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0., 1.); }`,
     fragmentShader: `
-      varying vec2 vUv; uniform float uTime, uLevel; uniform vec2 uRes, uMouse; uniform vec3 uColA, uColB;
+      varying vec2 vUv; uniform float uTime, uLevel, uSite; uniform vec2 uRes, uMouse; uniform vec3 uColA, uColB;
       float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
       float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.-2.*f);
         return mix(mix(hash(i), hash(i+vec2(1,0)), f.x), mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y); }
@@ -77,6 +78,9 @@
         // vignette
         vec2 v = (uv - .5) * vec2(1.05, 1.25);
         col *= 1. - dot(v, v) * 1.15;
+        col = mix(col, vec3(.043, .039, .059), uSite);
+        float st = hash(floor(uv * uRes / 3.));
+        col += vec3(.8, .8, .85) * step(.9982, st) * (.5 + .5 * sin(uTime * 1.6 + st * 80.)) * uSite * .7;
         gl_FragColor = vec4(col, 1.);
       }`,
   });
@@ -295,6 +299,10 @@
   }
 
 
+  // Where the orb sits on the studio site: each section sets an anchor while you scroll (site.js)
+  const anchor = { x: 0, y: 0, s: 1 }, anchorNow = { x: 0, y: 0, s: 1 };
+  let spinKick = 0;
+
   const palette = { ai: ["#36e4d0", "#7b5bff"], saas: ["#5ab0ff", "#36e4d0"], mobile: ["#ffb35c", "#ff5c8a"], unsure: ["#36e4d0", "#3b5bff"] };
   let colTarget = palette.unsure;
   const tint = (key) => (colTarget = palette[key] || palette.unsure);
@@ -308,6 +316,7 @@
   const colA = new THREE.Color(), colB = new THREE.Color();
 
   const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+  let siteMode = false;
   addEventListener("pointermove", (e) => { mouse.tx = e.clientX / innerWidth - 0.5; mouse.ty = e.clientY / innerHeight - 0.5; });
 
   function resize() {
@@ -852,13 +861,14 @@
     sfx.chime();
     setStatus("COMPLETE");
     step.classList.add("ready");
+    // Open the site (and scrolling) as soon as the plan is on screen — don't wait for the voice to finish
+    unlockSite();
     const expected = (LIB.build[answers.build] || LIB.build.unsure).title;
     const key = p.archetype === expected ? `result-${answers.build || "unsure"}` : "result";
     const line = LINES[key];
     if (sfx.on && line) await voice.play(clipUrl(key), line.say);
     else await wait(1600);
     if (my !== flow) return;
-    unlockSite();
     await present($("#unlockHint"), "unlock", my);
     if (my === flow) setStatus("ONLINE");
   }
@@ -867,15 +877,16 @@
     const f = $("#contactForm");
     if (answers.name) f.name.value = answers.name;
     if (answers.email) f.email.value = answers.email;
-    const map = { ai: "AI System", saas: "SaaS Platform", mobile: "Mobile App", unsure: "Not sure yet" };
-    if (answers.build) f.service.value = map[answers.build];
+    // Whatever they're building, the matching studio service is AI, SaaS & Mobile
+    if (answers.build) f.service.value = "AI, SaaS & Mobile Apps";
+    if (plan && plan.archetype && !f.message.value) f.message.value = `Hi, I'm ${answers.name || "interested in working together"}. The guide suggested "${plan.archetype}" for my project.`;
   }
 
   $("#restartBtn").addEventListener("click", () => {
     Object.keys(answers).forEach((k) => (answers[k] = ""));
     $$(".picked").forEach((b) => b.classList.remove("picked"));
     $("#nameInput").value = ""; $("#emailInput").value = ""; plan = null; tint("unsure");
-    scrollTo({ top: 0, behavior: "smooth" });
+    if (window.LMSite) window.LMSite.scrollTo(0); else scrollTo({ top: 0, behavior: "smooth" });
     enter("name");
   });
 
@@ -886,9 +897,23 @@
     site.setAttribute("aria-hidden", "false");
     document.body.classList.remove("locked");
     requestAnimationFrame(() => requestAnimationFrame(() => site.classList.add("visible")));
-    $$(".reveal", site).forEach((el) => io.observe(el));
-    ["process", "work", "contact"].forEach((id) => sectionShape.observe($("#" + id)));
     sfx.whoosh();
+    // Give the page a frame to lay out, then start the scroll animations (site.js)
+    setTimeout(() => window.LMSite && window.LMSite.init(), 120);
+  }
+
+  // Deep links from the inner pages (e.g. index.html#services) open the studio site directly,
+  // skipping the guided questions. The plan experience is still there at the top of the page.
+  const SITE_IDS = ["manifesto", "work", "services", "process", "about", "numbers", "clients", "words", "contact"];
+  const deep = location.hash.slice(1);
+  if (SITE_IDS.includes(deep)) {
+    $(".hud-ring").style.opacity = "";
+    unlockSite();
+    // site.js loads after this file, so wait until both are ready
+    addEventListener("DOMContentLoaded", () => {
+      const el = document.getElementById(deep);
+      if (window.LMSite) window.LMSite.goTo(el); else el.scrollIntoView();
+    });
   }
 
   /* =====================================================================
@@ -911,24 +936,24 @@
   /* =====================================================================
    * 8. SCROLL, MENU, CURSOR, HUD, FORM
    * ===================================================================== */
-  const io = new IntersectionObserver((entries) => entries.forEach((e) => {
-    if (!e.isIntersecting) return;
-    e.target.classList.add("in");
-    if (e.target.dataset.shape) morph(e.target.dataset.shape);
-    $$("[data-count]", e.target).forEach(countUp);
-  }), { threshold: 0.25 });
-  const sectionShape = new IntersectionObserver((entries) => entries.forEach((e) => {
-    if (!e.isIntersecting) return;
-    if (e.target.id === "experience") morph(stepName === "result" ? ({ ai: "neural", saas: "grid", mobile: "phone" }[answers.build] || "orb") : "orb");
-    else if (e.target.id === "contact") morph("orb");
-    else morph("drift");
-  }), { threshold: 0.3 });
-  sectionShape.observe($("#experience"));
-  function countUp(el) {
-    if (el.dataset.done) return; el.dataset.done = 1;
-    const end = +el.dataset.count, start = performance.now();
-    (function f(now) { const k = Math.min(1, (now - start) / 1600); el.textContent = Math.round(end * ease(k)); if (k < 1) requestAnimationFrame(f); })(start);
-  }
+  // Bridge for site.js (the studio site below the experience)
+  window.LM = {
+    // Move the talking orb to a section's spot (x, y in scene units; sc = size hint from the page)
+    blob: (x, y, sc) => { anchor.x = x; anchor.y = y * 0.85; anchor.s = 0.25 + sc * 0.3; },
+    velocity: (v) => (spinKick = Math.max(spinKick, Math.min(2, Math.abs(v) * 0.02))),
+    siteMode(on) {
+      if (on === siteMode) return;
+      siteMode = on;
+      document.body.classList.toggle("in-site", on);
+      if (on) { morph("orb"); colTarget = palette.unsure; }
+      else {
+        anchor.x = 0; anchor.y = 0; anchor.s = 1;
+        morph(stepName === "result" ? ({ ai: "neural", saas: "grid", mobile: "phone" }[answers.build] || "orb") : "orb");
+        colTarget = stepName === "result" ? (palette[answers.build] || palette.unsure) : (STEP_COLORS[stepName] || palette.unsure);
+      }
+    },
+    sfx: (k) => { if (k === "tick") sfx.tick(); else if (k === "select") sfx.submit(); else if (k === "whoosh") sfx.whoosh(); },
+  };
 
   const menu = $("#menu"), menuBtn = $("#menuBtn");
   const setMenu = (open) => { menu.classList.toggle("open", open); menuBtn.setAttribute("aria-expanded", open); menu.setAttribute("aria-hidden", !open); sfx.blip(open ? 520 : 390); };
@@ -950,8 +975,8 @@
   $("#contactForm").addEventListener("submit", (e) => {
     e.preventDefault();
     const d = Object.fromEntries(new FormData(e.target));
-    const body = `Name: ${d.name}\nEmail: ${d.email}\nCompany: ${d.company}\nBuilding: ${d.service}\nBudget: ${d.budget}\n\n${d.message}`;
-    location.href = `mailto:hello@thelincolnmedia.com?subject=${encodeURIComponent("New project — " + d.service)}&body=${encodeURIComponent(body)}`;
+    const body = `Name: ${d.name}\nEmail: ${d.email}\nCompany / Brand: ${d.company}\nService: ${d.service}\nBudget: ${d.budget}\n\n${d.message}`;
+    location.href = `mailto:sales@thelincolnmedia.com?subject=${encodeURIComponent("New project — " + d.service)}&body=${encodeURIComponent(body)}`;
     $("#formNote").textContent = "Opening your email app…";
     sfx.chime();
   });
@@ -1001,17 +1026,18 @@
       ring.obj.visible = true;
       ring.update(t, lv, voice.spectrum(), voice.waveform());
       ring.obj.rotation.set(0, 0, 0);
-      ring.obj.position.set(mouse.x * 0.25, -mouse.y * 0.18, 0);
+      ring.obj.position.set(anchorNow.x + mouse.x * 0.25, anchorNow.y - mouse.y * 0.18, 0);
+      ring.obj.scale.setScalar(anchorNow.s);
     } else ring.obj.visible = false;
 
     if (isOrb) {
       // Turns slowly, faster while speaking; tilts toward the cursor
-      if (!reduced) spin += dt * (0.12 + lv * 0.5);
+      if (!reduced) spin += dt * (0.12 + lv * 0.5 + spinKick);
       points.rotation.y += (spin + mouse.x * 1.1 - points.rotation.y) * 0.06;
       points.rotation.x += (mouse.y * 0.6 - points.rotation.x) * 0.06;
-      const sc = 1 + lv * 0.05;
+      const sc = anchorNow.s * (1 + lv * 0.05);
       points.scale.setScalar(points.scale.x + (sc - points.scale.x) * 0.3);
-      points.position.set(mouse.x * 0.25, -mouse.y * 0.18, 0);
+      points.position.set(anchorNow.x + mouse.x * 0.25, anchorNow.y - mouse.y * 0.18, 0);
       scene.rotation.y += (0 - scene.rotation.y) * 0.05;
     } else {
       points.scale.setScalar(points.scale.x + (1 - points.scale.x) * 0.1);
@@ -1021,6 +1047,14 @@
       scene.rotation.y += (mouse.x * 0.5 - scene.rotation.y) * 0.05;
     }
 
+    // Ease the orb toward its current anchor (centre during the experience, per-section on the site)
+    const kAsp = Math.min(1, innerWidth / innerHeight / 1.6);
+    anchorNow.x += (anchor.x * kAsp - anchorNow.x) * 0.05;
+    anchorNow.y += (anchor.y - anchorNow.y) * 0.05;
+    anchorNow.s += (anchor.s - anchorNow.s) * 0.05;
+    spinKick *= 0.94;
+    const sizeT = (siteMode ? 1.7 : 3.4) * renderer.getPixelRatio();
+    uniforms.uSize.value += (sizeT - uniforms.uSize.value) * 0.05;
     renderer.clear();
     renderer.render(bgScene, bgCam);
     renderer.render(scene, camera);

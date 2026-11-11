@@ -7,10 +7,11 @@
 <meta name="description" content="The Lincoln Media is a New York studio building AI systems, SaaS platforms and mobile apps. Tell our guide what you're building and get a personal build plan.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=10">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Unbounded:wght@500;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=16">
+<link rel="stylesheet" href="site.css?v=16">
 </head>
-<body class="locked">
+<body class="locked" data-page="home">
 <canvas id="field" aria-hidden="true"></canvas>
 <div class="scanlines" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
@@ -40,21 +41,26 @@
 </aside>
 
 <header class="hud">
-  <a class="logo" href="#top" aria-label="The Lincoln Media home">THE&nbsp;LINCOLN<span>MEDIA</span></a>
+  <a class="logo" href="#top" aria-label="The Lincoln Media home"><span class="logo-text">THE&nbsp;LINCOLN<span>MEDIA</span></span></a>
   <p class="mono hud-tag">AI · SAAS · MOBILE &nbsp;/&nbsp; NEW YORK</p>
+  <nav class="site-nav" aria-label="Main">
+    <a href="#home">Home</a><a href="/about-us">About</a><a href="#services">Services</a><a href="#work">Work</a><a href="#contact">Contact</a>
+  </nav>
+  <a class="btn btn-red btn-sm talk magnetic" href="#contact"><span>Let's talk</span><i>↗</i></a>
   <button class="mono sound" id="soundBtn" aria-pressed="true">SOUND <b data-on class="active">ON</b> / <b data-off>OFF</b></button>
   <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
 </header>
 
 <nav class="menu" id="menu" aria-hidden="true">
   <ul>
-    <li><a href="#experience" data-close>01 &nbsp;Experience</a></li>
-    <li><a href="#services" data-close>02 &nbsp;Capabilities</a></li>
-    <li><a href="#process" data-close>03 &nbsp;Process</a></li>
+    <li><a href="#home" data-close>01 &nbsp;Home</a></li>
+    <li><a href="/about-us" data-close>02 &nbsp;About</a></li>
+    <li><a href="#services" data-close>03 &nbsp;Services</a></li>
     <li><a href="#work" data-close>04 &nbsp;Work</a></li>
     <li><a href="#contact" data-close>05 &nbsp;Contact</a></li>
+    <li><a href="#experience" data-close>06 &nbsp;Your plan</a></li>
   </ul>
-  <p class="mono">hello@thelincolnmedia.com &nbsp;·&nbsp; New York</p>
+  <p class="mono">sales@thelincolnmedia.com &nbsp;·&nbsp; +1-332-222-3984 &nbsp;·&nbsp; New York</p>
 </nav>
 
 <footer class="progress mono" aria-live="polite">PROGRESS <b id="progressVal">0%</b><i><em id="progressBar"></em></i></footer>
@@ -187,97 +193,253 @@
 
   <!-- The rest of the site stays hidden until the visitor finishes the questions -->
   <div class="site" id="site" aria-hidden="true">
-    <section class="manifesto reveal">
-      <p class="mono">MANIFESTO</p>
-      <h2>Software shouldn't just work. It should think, scale and feel right in your hand — <em>from the first tap to the millionth user.</em></h2>
+    <div class="scroll-rail" aria-hidden="true"><i id="scrollRail"></i></div>
+    <p class="sec-index mono" id="secIndex" aria-hidden="true"><b>01</b> / HOME</p>
+
+    <!-- HERO -->
+    <section class="s-hero" id="home" data-blob="2.5,0.15,1.55" data-label="HOME">
+      <div class="hero-meta mono">
+        <span class="dot">New York</span><span>Est. 2012</span>
+        <span class="hero-meta-r"><i class="live"></i>Available for new projects</span>
+      </div>
+      <h1 class="hero-title display" data-split>We create<br>digital<br>experiences<br>that move<br>people.</h1>
+      <div class="hero-foot">
+        <p class="hero-lede">The Lincoln Media is a New York studio for web, marketing, e-commerce and branding — built to be felt, not just seen.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-red magnetic" href="#contact"><span>Start a project</span><i>↗</i></a>
+          <a class="btn btn-ghost magnetic" href="#work"><span>View work</span></a>
+        </div>
+      </div>
+      <div class="hero-hud mono" aria-hidden="true">
+        <span>SYS // ONLINE</span><span>40.7128° N · 74.0060° W</span><span id="heroClock">NYC --:--:--</span>
+      </div>
+      <a class="scroll-cue mono" href="#manifesto"><span>Scroll</span><i></i></a>
     </section>
 
-    <section class="services" id="services">
-      <header class="sec-head reveal"><p class="mono">CAPABILITIES (03)</p><h2>Three ways we<br>build the future.</h2></header>
-      <article class="service reveal" data-shape="neural">
-        <span class="mono idx">01</span>
-        <div>
-          <h3>AI Systems</h3>
-          <p>Custom AI that does real work inside your business — assistants that know your data, agents that handle the busywork, and models wired into the tools your team already uses.</p>
-          <ul class="tags mono"><li>LLM integration</li><li>AI agents &amp; automation</li><li>RAG &amp; knowledge bases</li><li>Chatbots &amp; voice AI</li><li>Computer vision</li><li>Predictive analytics</li><li>AI strategy &amp; audits</li></ul>
-        </div>
-      </article>
-      <article class="service reveal" data-shape="grid">
-        <span class="mono idx">02</span>
-        <div>
-          <h3>SaaS Development</h3>
-          <p>Multi-tenant platforms engineered from day one to onboard, bill and scale — from an MVP that proves the idea to an enterprise product that carries the company.</p>
-          <ul class="tags mono"><li>MVP builds</li><li>Multi-tenant architecture</li><li>Subscription billing</li><li>Dashboards &amp; admin</li><li>APIs &amp; integrations</li><li>Cloud &amp; DevOps</li><li>Legacy modernisation</li></ul>
-        </div>
-      </article>
-      <article class="service reveal" data-shape="phone">
-        <span class="mono idx">03</span>
-        <div>
-          <h3>Mobile App Development</h3>
-          <p>Native and cross-platform apps for iOS and Android, designed to feel effortless and built to survive launch day, the App Store review and everything after.</p>
-          <ul class="tags mono"><li>iOS (Swift)</li><li>Android (Kotlin)</li><li>React Native</li><li>Flutter</li><li>App UX/UI</li><li>Store launch &amp; ASO</li><li>Maintenance &amp; support</li></ul>
-        </div>
-      </article>
+    <!-- MANIFESTO -->
+    <section class="s-manifesto" id="manifesto" data-blob="-0.5,0.35,1.4" data-label="MANIFESTO">
+      <p class="label"><i></i>Manifesto</p>
+      <p class="manifesto-text display" data-words>Brands don't need more noise. They need moments people remember <span data-tail>— and the craft to build them.</span></p>
     </section>
 
-    <section class="process" id="process">
-      <header class="sec-head reveal"><p class="mono">HOW WE WORK</p><h2>Five moves.<br>No wasted ones.</h2></header>
-      <ol class="moves">
-        <li class="reveal"><span class="mono">01</span><h4>Discover</h4><p>Workshops, audits and research. We find the real problem before we touch a pixel.</p></li>
-        <li class="reveal"><span class="mono">02</span><h4>Define</h4><p>Scope, architecture and a roadmap you can hold us to — with the AI and data decisions made up front.</p></li>
-        <li class="reveal"><span class="mono">03</span><h4>Design</h4><p>Flows, prototypes and interface systems tested with real users before a line of production code.</p></li>
-        <li class="reveal"><span class="mono">04</span><h4>Build</h4><p>Two-week sprints, a live staging link and weekly demos. You see progress, not status reports.</p></li>
-        <li class="reveal"><span class="mono">05</span><h4>Launch &amp; grow</h4><p>Store releases, cloud rollout, monitoring and iteration. We stay on after go-live.</p></li>
-      </ol>
-      <p class="philosophy reveal">Creativity, technology and strategy.<br><span>One team. Zero hand-offs.</span></p>
-    </section>
+    <!-- WORK -->
+    <section class="s-work" id="work" data-blob="1.2,1.55,0.62" data-label="WORK">
+      <header class="sec-head">
+        <p class="label"><i></i>Featured work</p>
+        <div class="sec-head-row"><h2 class="display" data-split>Selected work</h2><span class="count display">(08)</span></div>
+      </header>
 
-    <section class="work" id="work">
-      <header class="sec-head reveal"><p class="mono">SELECTED WORK</p><h2>Built to perform.<br>Designed to be felt.</h2></header>
-      <div class="work-list">
-        <a class="work-row reveal" href="#contact"><span class="mono">01 — SAAS</span><h3>Polly</h3><span class="mono">Product Design · Front-end</span></a>
-        <a class="work-row reveal" href="#contact"><span class="mono">02 — FINTECH</span><h3>CryptoSouk</h3><span class="mono">UX/UI · Web App · Branding</span></a>
-        <a class="work-row reveal" href="#contact"><span class="mono">03 — PROPERTY PLATFORM</span><h3>BetterHomes</h3><span class="mono">Product Design · Development</span></a>
-        <a class="work-row reveal" href="#contact"><span class="mono">04 — RECRUITMENT</span><h3>Upmatch</h3><span class="mono">Web Platform</span></a>
-        <a class="work-row reveal" href="#contact"><span class="mono">05 — LUXURY REAL ESTATE</span><h3>Belgravia London</h3><span class="mono">Web Design · Development · SEO</span></a>
+      <a class="feature" href="/work/belgravia-london">
+        <figure class="media brackets" data-reveal>
+          <img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=2000&q=80" alt="Belgravia London — luxury real estate website" loading="lazy" data-parallax>
+          <span class="scan" aria-hidden="true"></span>
+        </figure>
+        <div class="feature-info">
+          <p class="mono kick">01 — Luxury real estate</p>
+          <h3 class="display" data-split>Belgravia London</h3>
+          <p class="mono tags-line">Web Design · Development · SEO</p>
+          <p class="feature-desc">A cinematic digital home for prime London property — where architecture leads and the interface steps aside.</p>
+          <span class="round-arrow" aria-hidden="true">↗</span>
+        </div>
+      </a>
+
+      <div class="hscroll" id="hscroll">
+        <div class="hscroll-track" id="hscrollTrack">
+          <div class="hs-intro">
+            <p class="label"><i></i>Recent launches</p>
+            <h3 class="display">Built to perform. <em>Designed to be felt.</em></h3>
+          </div>
+          <a class="card" href="/work/betterhomes"><figure class="media brackets"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1400&q=80" alt="BetterHomes — property platform" loading="lazy"><span class="scan"></span></figure>
+            <div class="card-info"><p class="mono kick">02 — Property platform</p><h3 class="display">BetterHomes</h3><p class="mono tags-line">Product Design · Development</p></div><span class="round-arrow">↗</span></a>
+          <a class="card" href="/work/cryptosouk"><figure class="media brackets"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1400&q=80" alt="CryptoSouk — fintech" loading="lazy"><span class="scan"></span></figure>
+            <div class="card-info"><p class="mono kick">03 — Fintech</p><h3 class="display">CryptoSouk</h3><p class="mono tags-line">UX/UI · Web App · Branding</p></div><span class="round-arrow">↗</span></a>
+          <a class="card" href="/work/the-bagel-shak"><figure class="media brackets"><img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1400&q=80" alt="The Bagel Shak — food and beverage" loading="lazy"><span class="scan"></span></figure>
+            <div class="card-info"><p class="mono kick">04 — Food &amp; beverage</p><h3 class="display">The Bagel Shak</h3><p class="mono tags-line">Branding · Packaging · E-commerce</p></div><span class="round-arrow">↗</span></a>
+          <a class="card" href="/work/bike-store"><figure class="media brackets"><img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1400&q=80" alt="Bike Store — retail e-commerce" loading="lazy"><span class="scan"></span></figure>
+            <div class="card-info"><p class="mono kick">05 — Retail e-commerce</p><h3 class="display">Bike Store</h3><p class="mono tags-line">Shopify Plus · CRO</p></div><span class="round-arrow">↗</span></a>
+          <a class="card" href="/work/polly"><figure class="media brackets"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=80" alt="Polly — SaaS" loading="lazy"><span class="scan"></span></figure>
+            <div class="card-info"><p class="mono kick">06 — SaaS</p><h3 class="display">Polly</h3><p class="mono tags-line">Product Design · Front-end</p></div><span class="round-arrow">↗</span></a>
+          <a class="card card-light" href="/work/upmatch"><figure class="media brackets"><img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1400&q=80" alt="Upmatch — recruitment" loading="lazy"><span class="scan"></span></figure>
+            <div class="card-info"><p class="mono kick">07 — Recruitment</p><h3 class="display">Upmatch</h3><p class="mono tags-line">Web Platform · SEO · PPC</p></div><span class="round-arrow">↗</span></a>
+          <a class="card" href="/work/aureum"><figure class="media brackets"><img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=1400&q=80" alt="Aureum — fine jewellery" loading="lazy"><span class="scan"></span></figure>
+            <div class="card-info"><p class="mono kick">08 — Fine jewellery</p><h3 class="display">Aureum</h3><p class="mono tags-line">Shopify Plus · Art Direction · Email</p></div><span class="round-arrow">↗</span></a>
+          <div class="hs-outro">
+            <p>Eight brands, eight different problems. Yours could be next.</p>
+            <a class="link-arrow" href="#contact">Start a project <i>↗</i></a>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- TODO: replace placeholder figures with the real ones before launch -->
-    <section class="numbers reveal">
-      <div><b data-count="350">0</b><span class="mono">Projects delivered +</span></div>
-      <div><b data-count="200">0</b><span class="mono">Happy clients +</span></div>
-      <div><b data-count="14">0</b><span class="mono">Years in the game</span></div>
-      <div><b data-count="20">0</b><span class="mono">Countries reached +</span></div>
+    <!-- SERVICES -->
+    <section class="s-services" id="services" data-blob="2.7,1.0,0.85" data-label="SERVICES">
+      <header class="sec-head">
+        <p class="label"><i></i>What we do</p>
+        <h2 class="display" data-split>Services</h2>
+        <p class="sec-sub">Five disciplines, one team. Pick a door — or walk through all of them.</p>
+      </header>
+      <div class="acc" id="services-list">
+        <article class="acc-item">
+          <button class="acc-head" aria-expanded="false"><span class="mono idx">01</span><h3 class="display">Web Development</h3><span class="plus" aria-hidden="true"></span></button>
+          <div class="acc-body"><div class="acc-inner">
+            <p>Fast, scalable websites and platforms on the stack that fits your business — from CMS builds to enterprise systems.</p>
+            <ul class="chips mono"><li>WordPress Development</li><li>SharePoint Development</li><li>Enterprise Development</li><li>Sitecore Development</li><li>PHP Development</li><li>Joomla Development</li><li>ASP.NET Development</li><li>CMS Development</li><li>Drupal Development</li><li>Laravel Development</li><li>Python Development</li><li>AngularJS Development</li><li>Website Maintenance Services</li><li>WhatsApp Integration</li></ul>
+            <a class="link-arrow" href="/services/web-development">Explore web development <i>→</i></a>
+          </div></div>
+        </article>
+        <article class="acc-item">
+          <button class="acc-head" aria-expanded="false"><span class="mono idx">02</span><h3 class="display">Digital Marketing</h3><span class="plus" aria-hidden="true"></span></button>
+          <div class="acc-body"><div class="acc-inner">
+            <p>SEO, paid media and social built on data — putting your brand in front of the right people and turning attention into revenue.</p>
+            <ul class="chips mono"><li>Social Media Marketing</li><li>Social Media Optimization</li><li>Pay Per Click</li><li>SEO</li><li>Conversion Rate Optimization</li><li>Email Marketing</li><li>GMB Optimization</li><li>Content Marketing</li><li>Online Reputation Management</li></ul>
+            <a class="link-arrow" href="/services/digital-marketing">Explore digital marketing <i>→</i></a>
+          </div></div>
+        </article>
+        <article class="acc-item">
+          <button class="acc-head" aria-expanded="false"><span class="mono idx">03</span><h3 class="display">E-commerce Web Development</h3><span class="plus" aria-hidden="true"></span></button>
+          <div class="acc-body"><div class="acc-inner">
+            <p>Conversion-obsessed stores on Shopify, Magento, WooCommerce and more — engineered to sell around the clock.</p>
+            <ul class="chips mono"><li>WooCommerce</li><li>Mirakl</li><li>Magento</li><li>BigCommerce</li><li>Shopify</li><li>Shopify Plus</li></ul>
+            <a class="link-arrow" href="/services/ecommerce-web-development">Explore e-commerce <i>→</i></a>
+          </div></div>
+        </article>
+        <article class="acc-item">
+          <button class="acc-head" aria-expanded="false"><span class="mono idx">04</span><h3 class="display">Digital Branding &amp; Communication</h3><span class="plus" aria-hidden="true"></span></button>
+          <div class="acc-body"><div class="acc-inner">
+            <p>Identities, packaging and brand systems with a point of view — instantly recognisable, impossible to forget.</p>
+            <ul class="chips mono"><li>Company Profile &amp; Brochure Design</li><li>Business Card Design</li><li>Corporate Identity Design</li><li>Packaging Designs</li><li>Logo Design</li></ul>
+            <a class="link-arrow" href="/services/branding-communication-agency">Explore branding <i>→</i></a>
+          </div></div>
+        </article>
+        <article class="acc-item">
+          <button class="acc-head" aria-expanded="false"><span class="mono idx">05</span><h3 class="display">AI, SaaS &amp; Mobile Apps</h3><span class="plus" aria-hidden="true"></span></button>
+          <div class="acc-body"><div class="acc-inner">
+            <p>Custom AI that does real work inside your business, SaaS platforms built to onboard, bill and scale, and native apps for iOS and Android that feel effortless.</p>
+            <ul class="chips mono"><li>LLM Integration</li><li>AI Agents &amp; Automation</li><li>Chatbots &amp; Voice AI</li><li>MVP Builds</li><li>Multi-tenant SaaS</li><li>Subscription Billing</li><li>iOS &amp; Android</li><li>React Native &amp; Flutter</li></ul>
+            <a class="link-arrow" href="/services/ai-saas-mobile">Explore AI, SaaS &amp; mobile <i>→</i></a>
+          </div></div>
+        </article>
+      </div>
+      <a class="btn btn-ghost magnetic explore-all" href="/services"><span>Explore all services</span><i>↗</i></a>
     </section>
 
-    <section class="contact" id="contact">
-      <header class="sec-head reveal"><p class="mono">CONTACT</p><h2>Let's build something<br>unexpected.</h2></header>
-      <form class="form reveal" id="contactForm">
-        <label><span class="mono">NAME *</span><input name="name" required></label>
-        <label><span class="mono">EMAIL *</span><input name="email" type="email" required></label>
-        <label><span class="mono">COMPANY</span><input name="company"></label>
-        <label><span class="mono">WHAT ARE YOU BUILDING *</span>
-          <select name="service" required><option value="">Choose one</option><option>AI System</option><option>SaaS Platform</option><option>Mobile App</option><option>Not sure yet</option></select></label>
-        <label><span class="mono">BUDGET *</span>
-          <select name="budget" required><option value="">Choose a range</option><option>Under $15k</option><option>$15k – $50k</option><option>$50k – $150k</option><option>$150k+</option><option>Not sure yet</option></select></label>
-        <label class="wide"><span class="mono">PROJECT DESCRIPTION *</span><textarea name="message" rows="4" required></textarea></label>
-        <button class="cta" type="submit">Send enquiry</button>
-        <p class="mono form-note" id="formNote" aria-live="polite"></p>
+    <!-- PROCESS -->
+    <section class="s-process" id="process" data-blob="2.6,0,1.35" data-label="PROCESS">
+      <div class="process-pin">
+        <header class="sec-head">
+          <p class="label"><i></i>How we work</p>
+          <h2 class="display" data-split>Five moves.<br>No wasted ones.</h2>
+        </header>
+        <div class="process-stage">
+          <div class="process-rail" aria-hidden="true"><i id="processFill"></i></div>
+          <div class="process-num display" aria-hidden="true"><span id="processNum">01</span></div>
+          <ol class="process-steps">
+            <li class="is-on"><p class="mono">Step 1:</p><h3 class="display">Discover</h3><p>Workshops, audits and research. We find the real problem before we touch a pixel.</p></li>
+            <li><p class="mono">Step 2:</p><h3 class="display">Strategy</h3><p>Positioning, journeys and a measurable plan everyone signs off on.</p></li>
+            <li><p class="mono">Step 3:</p><h3 class="display">Design</h3><p>Systems, prototypes and motion — tested with real people, refined until it sings.</p></li>
+            <li><p class="mono">Step 4:</p><h3 class="display">Build</h3><p>Clean, fast, accessible code. QA'd across every device that matters.</p></li>
+            <li><p class="mono">Step 5:</p><h3 class="display">Launch &amp; Grow</h3><p>Zero-drama launches, then SEO, ads and CRO to compound the results.</p></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHILOSOPHY -->
+    <section class="s-philosophy" id="about" data-blob="-2.6,-0.6,1.0" data-label="ABOUT">
+      <p class="label"><i></i>Philosophy</p>
+      <p class="philo-text display" data-words>Creativity, technology and strategy. <span data-tail>One team. Zero hand-offs.</span></p>
+      <figure class="media brackets philo-img philo-img-a" data-reveal><img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80" alt="Team working together on laptops" loading="lazy" data-parallax><span class="scan"></span></figure>
+      <figure class="media brackets philo-img philo-img-b" data-reveal><img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1200&q=80" alt="Code on a screen" loading="lazy" data-parallax><span class="scan"></span></figure>
+    </section>
+
+    <!-- NUMBERS -->
+    <section class="s-numbers" id="numbers" data-blob="0,-2.3,0.7" data-label="NUMBERS">
+      <p class="label"><i></i>In numbers</p>
+      <dl class="stats">
+        <div class="stat"><dt class="mono">Projects delivered</dt><dd class="display"><span data-count="1200">0</span><em>+</em></dd></div>
+        <div class="stat"><dt class="mono">Happy clients</dt><dd class="display"><span data-count="850">0</span><em>+</em></dd></div>
+        <div class="stat"><dt class="mono">Years in the game</dt><dd class="display"><span data-count="12">0</span></dd></div>
+        <div class="stat"><dt class="mono">Countries reached</dt><dd class="display"><span data-count="25">0</span><em>+</em></dd></div>
+      </dl>
+    </section>
+
+    <!-- CLIENTS -->
+    <section class="s-clients" id="clients" data-blob="0,2.6,0.45" data-label="CLIENTS">
+      <p class="label"><i></i>Brands we've moved</p>
+      <div class="marquee" data-dir="1"><div class="marquee-track display"><span>Belgravia London</span><b>✦</b><span>BetterHomes</span><b>✦</b><span>CryptoSouk</span><b>✦</b><span>The Bagel Shak</span><b>✦</b><span>Bike Store</span><b>✦</b><span>Polly</span><b>✦</b><span>Upmatch</span><b>✦</b><span>Aureum</span><b>✦</b></div></div>
+      <div class="marquee marquee-outline" data-dir="-1"><div class="marquee-track display"><span>Aureum</span><b>✦</b><span>Upmatch</span><b>✦</b><span>Polly</span><b>✦</b><span>Bike Store</span><b>✦</b><span>The Bagel Shak</span><b>✦</b><span>CryptoSouk</span><b>✦</b><span>BetterHomes</span><b>✦</b><span>Belgravia London</span><b>✦</b></div></div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="s-words" id="words" data-blob="-2.8,1.1,0.9" data-label="KIND WORDS">
+      <p class="label"><i></i>Kind words</p>
+      <p class="mono note">Sample testimonials — placeholders until real client quotes are approved.</p>
+      <div class="quotes" id="quotes" aria-live="polite">
+        <figure class="quote is-on"><blockquote class="display">“They rebuilt our site from the ground up and organic leads doubled in four months. The craft is obsessive.”</blockquote>
+          <figcaption><span class="avatar">R</span><span><b>Sample Client</b><em>Marketing Director, Real estate brand</em></span></figcaption></figure>
+        <figure class="quote"><blockquote class="display">“Our replatform went live with zero downtime. Conversion is up and the store finally feels like us.”</blockquote>
+          <figcaption><span class="avatar">J</span><span><b>Sample Client</b><em>Founder, Jewellery brand</em></span></figcaption></figure>
+        <figure class="quote"><blockquote class="display">“From logo to packaging they gave us a personality customers recognise from across the street.”</blockquote>
+          <figcaption><span class="avatar">H</span><span><b>Sample Client</b><em>Owner, Hospitality group</em></span></figcaption></figure>
+        <figure class="quote"><blockquote class="display">“Weekly demos, straight answers and a product our users love. It feels like one team.”</blockquote>
+          <figcaption><span class="avatar">F</span><span><b>Sample Client</b><em>Head of Product, Fintech startup</em></span></figcaption></figure>
+      </div>
+      <div class="quote-nav">
+        <span class="mono" id="quoteCount">01 / 04</span>
+        <i class="quote-bar"><em id="quoteBar"></em></i>
+        <button class="round-btn" id="quotePrev" aria-label="Previous testimonial">←</button>
+        <button class="round-btn" id="quoteNext" aria-label="Next testimonial">→</button>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="s-contact" id="contact" data-blob="2.9,-1.1,1.2" data-label="CONTACT">
+      <header class="sec-head">
+        <p class="label"><i></i>Contact</p>
+        <h2 class="display" data-split>Let's create<br>something<br>unexpected.</h2>
+      </header>
+      <form class="form glass" id="contactForm">
+        <label><span class="mono">Name *</span><input name="name" required autocomplete="name"></label>
+        <label><span class="mono">Email *</span><input name="email" type="email" required autocomplete="email"></label>
+        <label><span class="mono">Company / Brand</span><input name="company" autocomplete="organization"></label>
+        <label><span class="mono">Service *</span>
+          <select name="service" required><option value="">Choose a service</option><option>Web Development</option><option>Digital Marketing</option><option>E-commerce Web Development</option><option>Digital Branding &amp; Communication</option><option>AI, SaaS &amp; Mobile Apps</option></select></label>
+        <label><span class="mono">Budget range *</span>
+          <select name="budget" required><option value="">Choose a range</option><option>Under $5k</option><option>$5k – $15k</option><option>$15k – $50k</option><option>$50k+</option><option>Not sure yet</option></select></label>
+        <label class="wide"><span class="mono">Project description *</span><textarea name="message" rows="4" required></textarea></label>
+        <div class="form-foot wide">
+          <button class="btn btn-red magnetic" type="submit"><span>Send enquiry</span><i>↗</i></button>
+          <p class="mono avail"><i class="live"></i>Available for new projects</p>
+          <p class="mono form-note" id="formNote" aria-live="polite"></p>
+        </div>
       </form>
     </section>
 
-    <footer class="site-foot mono">
-      <span>© <span id="year"></span> The Lincoln Media</span>
-      <span>New York · Est. 2012</span>
-      <span>Voice by Kokoro (Apache 2.0)</span>
-      <a href="#top">Back to top ↑</a>
+    <!-- FOOTER -->
+    <footer class="s-footer" data-blob="0,-0.9,0.95" data-label="FOOTER">
+      <div class="foot-cols">
+        <div><p class="mono foot-h">Overview</p><ul><li><a href="/about-us">About Us</a></li><li><a href="/services">Services</a></li><li><a href="/terms-and-condition">Terms &amp; Conditions</a></li><li><a href="/privacy-policy">Privacy Policy</a></li><li><a href="/refund-policy">Refund Policy</a></li></ul></div>
+        <div><p class="mono foot-h">Web Solutions</p><ul><li><a href="/services/web-development">Web Development</a></li><li><a href="/services/digital-marketing">Digital Marketing</a></li><li><a href="/services/ecommerce-web-development">E-commerce Web Development</a></li><li><a href="/services/branding-communication-agency">Branding &amp; Communication</a></li><li><a href="/services/ai-saas-mobile">AI, SaaS &amp; Mobile Apps</a></li></ul></div>
+        <div><p class="mono foot-h">Digital Marketing</p><ul><li><a href="/services/pay-per-click">PPC</a></li><li><a href="/services/seo">SEO</a></li><li><a href="/services/conversion-rate-optimization">CRO</a></li><li><a href="/services/content-marketing">Content Marketing</a></li><li><a href="/services/social-media-marketing">SMM</a></li><li><a href="/services/social-media-optimization">SMO</a></li><li><a href="/services/email-marketing">Email Marketing</a></li></ul></div>
+        <div><p class="mono foot-h">Contact</p><ul><li><a href="tel:+13322223984">+1-332-222-3984</a></li><li><a href="https://wa.me/13322223984" target="_blank" rel="noopener">WhatsApp</a></li><li><a href="mailto:sales@thelincolnmedia.com">sales@thelincolnmedia.com</a></li><li>667 Madison Ave, Floor 4&amp;5,<br>New York, NY 10065</li></ul></div>
+      </div>
+      <p class="wordmark display" aria-label="The Lincoln Media"><span>The Lincoln</span> <span>Media</span></p>
+      <div class="foot-base mono">
+        <span>© <span id="year"></span> The Lincoln Media. All rights reserved.</span>
+        <span>New York · Est. 2012</span>
+        <span>Voice by Kokoro (Apache 2.0)</span>
+        <a href="#top" data-top>Back to top ↑</a>
+      </div>
     </footer>
   </div>
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="voice-lines.js?v=10"></script>
-<script src="app.js?v=10"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="voice-lines.js?v=16"></script>
+<script src="app.js?v=16"></script>
+<script src="site.js?v=16"></script>
 </body>
 </html>

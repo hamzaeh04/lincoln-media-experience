@@ -70,10 +70,16 @@ createServer(async (req, res) => {
     if (path.endsWith("/")) path += "index.html";
     const file = join(root, path);
     if (!file.startsWith(root) || /[/\\](node_modules|\.env)/.test(path)) { res.writeHead(404); return res.end(); }
-    const info = await stat(file).catch(() => null);
-    if (!info || !info.isFile()) { res.writeHead(404); return res.end("Not found"); }
-    res.writeHead(200, { "Content-Type": TYPES[extname(file)] || "application/octet-stream", "Cache-Control": "no-cache" });
-    res.end(await readFile(file));
+    let info = await stat(file).catch(() => null);
+    let target = file;
+    // Folder URLs (/services/seo) serve their index.html, like Vercel does
+    if (info && info.isDirectory()) { target = join(file, "index.html"); info = await stat(target).catch(() => null); }
+    if (!info || !info.isFile()) {
+      res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
+      return res.end(await readFile(join(root, "404.html")).catch(() => "Not found"));
+    }
+    res.writeHead(200, { "Content-Type": TYPES[extname(target)] || "application/octet-stream", "Cache-Control": "no-cache" });
+    res.end(await readFile(target));
   } catch (e) {
     console.error(e.message);
     if (!res.headersSent) res.writeHead(500);
