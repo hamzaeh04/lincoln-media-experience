@@ -9,7 +9,7 @@ import { KokoroTTS } from "kokoro-js";
 
 const PORT = Number(process.env.PORT || 5178);
 const VOICE = process.env.VOICE || "af_heart";
-const SPEED = Number(process.env.SPEED || 0.92);
+const SPEED = Number(process.env.SPEED || 1.15);
 const root = new URL(".", import.meta.url).pathname;
 
 const TYPES = {

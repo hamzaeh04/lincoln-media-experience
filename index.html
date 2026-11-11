@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Unbounded:wght@500;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=16">
-<link rel="stylesheet" href="site.css?v=16">
+<link rel="stylesheet" href="styles.css?v=37">
+<link rel="stylesheet" href="site.css?v=37">
 </head>
 <body class="locked" data-page="home">
 <canvas id="field" aria-hidden="true"></canvas>
@@ -116,11 +116,18 @@
       <div class="step" data-step="build">
         <h2 class="headline" data-say="build" aria-live="polite"></h2>
         <div class="after">
-          <div class="choices" data-key="build">
-            <button data-value="ai"><i class="mono">A</i>An AI system</button>
-            <button data-value="saas"><i class="mono">B</i>A SaaS platform</button>
-            <button data-value="mobile"><i class="mono">C</i>A mobile app</button>
-            <button data-value="unsure"><i class="mono">D</i>Not sure yet</button>
+          <div class="choices icons" data-key="build">
+            <button data-value="design"><span class="ico-wrap"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1 0 1.6-.8 1.6-1.6 0-.5-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16a5 5 0 0 0 5-5C21 6.4 17 3 12 3Z"/><circle cx="7.5" cy="11" r="1.2"/><circle cx="10" cy="7" r="1.2"/><circle cx="14.5" cy="7" r="1.2"/></svg></span><span class="lbl">UI/UX & Branding</span></button>
+            <button data-value="marketing"><span class="ico-wrap"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1Z"/><path d="M15 9a4 4 0 0 1 0 6"/><path d="M18 6a8 8 0 0 1 0 12"/></svg></span><span class="lbl">Digital Marketing & SEO</span></button>
+            <button data-value="web"><span class="ico-wrap"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><circle cx="6" cy="6.5" r=".6"/><circle cx="8.5" cy="6.5" r=".6"/><path d="m10 13-2 2 2 2M14 13l2 2-2 2"/></svg></span><span class="lbl">A website or web app</span></button>
+            <button data-value="ecom"><span class="ico-wrap"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a1 1 0 0 0 1 .8h8.8a1 1 0 0 0 1-.8L20 8H6.2"/><circle cx="9" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/></svg></span><span class="lbl">An e-commerce store</span></button>
+            <button data-value="saas"><span class="ico-wrap"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.6-8A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9H7Z"/><path d="M12 12v5M9.5 14.5 12 12l2.5 2.5"/></svg></span><span class="lbl">A SaaS platform</span></button>
+            <button data-value="ai"><span class="ico-wrap"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg></span><span class="lbl">An AI system</span></button>
+            <button data-value="mobile"><span class="ico-wrap"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></span><span class="lbl">A mobile app</span></button>
+            <button data-value="chatbot"><span class="ico-wrap"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-9l-5 4v-4H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/><circle cx="9" cy="11" r="1"/><circle cx="15" cy="11" r="1"/></svg></span><span class="lbl">An AI chatbot or agent</span></button>
+            <button data-value="automation"><span class="ico-wrap"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1 7 17M17 7l2.1-2.1"/></svg></span><span class="lbl">Workflow automation</span></button>
+            <button data-value="crm"><span class="ico-wrap"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><span class="lbl">A custom CRM or dashboard</span></button>
+            <button data-value="unsure"><span class="ico-wrap"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7"/><circle cx="12" cy="17" r=".6"/></svg></span><span class="lbl">Not sure yet</span></button>
           </div>
         </div>
       </div>
@@ -173,13 +180,37 @@
 
       <div class="step" data-step="result">
         <div class="result">
-          <p class="mono">YOUR SIGNAL</p>
+          <span class="result-glow" aria-hidden="true"></span>
+          <div class="result-top">
+            <p class="mono result-tag"><i></i>YOUR SIGNAL</p>
+            <p class="mono result-id" id="resultId">PLAN LM-0000</p>
+          </div>
           <h2 class="archetype" id="archetype">—</h2>
           <p class="result-lede" id="resultLede"></p>
-          <div class="result-grid">
-            <div><p class="mono">WHAT WE'D BUILD</p><ul id="resultStack"></ul></div>
-            <div><p class="mono">FIRST 90 DAYS</p><ol id="resultPlan"></ol></div>
+
+          <div class="result-stats">
+            <div class="rstat rstat-cost">
+              <p class="mono">ESTIMATED INVESTMENT</p>
+              <p class="rstat-v"><span id="costLow">$0</span><em>–</em><span id="costHigh">$0</span></p>
+              <p class="rstat-s" id="costNote">USD · one-time build</p>
+            </div>
+            <div class="rstat"><p class="mono">TIMELINE</p><p class="rstat-v" id="statWeeks">—</p><p class="rstat-s" id="statWeeksNote">to launch</p></div>
+            <div class="rstat"><p class="mono">TEAM</p><p class="rstat-v" id="statTeam">—</p><p class="rstat-s">specialists</p></div>
+            <div class="rstat"><p class="mono">FIT</p><p class="rstat-v" id="statFit">—</p><p class="rstat-s">match with our studio</p></div>
           </div>
+
+          <div class="cost-break">
+            <p class="mono">WHERE THE BUDGET GOES</p>
+            <div class="cost-bar" id="costBar"></div>
+            <ul class="cost-legend" id="costLegend"></ul>
+          </div>
+
+          <div class="result-grid">
+            <div><p class="mono">WHAT WE'D BUILD</p><ul class="stack-tiles" id="resultStack"></ul></div>
+            <div><p class="mono" id="planTitle">ROADMAP</p><ol class="roadmap" id="resultPlan"></ol></div>
+          </div>
+
+          <p class="result-fine">Indicative estimate based on your answers. You get a fixed quote after a free 30-minute discovery call.</p>
           <div class="result-actions">
             <a class="cta" href="#contact">Start this project</a>
             <button class="ghost" id="restartBtn">Retake</button>
@@ -188,7 +219,7 @@
         <p class="mono unlock-hint" id="unlockHint"></p>
       </div>
     </div>
-    <button class="mono skip-intro" id="skipIntro" hidden>SKIP INTRO →</button>
+    <button class="mono skip-intro" id="skipIntro">SKIP INTRO →</button>
   </section>
 
   <!-- The rest of the site stays hidden until the visitor finishes the questions -->
@@ -213,61 +244,117 @@
       <div class="hero-hud mono" aria-hidden="true">
         <span>SYS // ONLINE</span><span>40.7128° N · 74.0060° W</span><span id="heroClock">NYC --:--:--</span>
       </div>
-      <a class="scroll-cue mono" href="#manifesto"><span>Scroll</span><i></i></a>
+      <a class="scroll-cue mono" href="#stories"><span>Scroll</span><i></i></a>
     </section>
 
     <!-- MANIFESTO -->
-    <section class="s-manifesto" id="manifesto" data-blob="-0.5,0.35,1.4" data-label="MANIFESTO">
-      <p class="label"><i></i>Manifesto</p>
-      <p class="manifesto-text display" data-words>Brands don't need more noise. They need moments people remember <span data-tail>— and the craft to build them.</span></p>
+    <section class="s-stories" id="stories" data-blob="-0.5,0.35,1.4" data-label="CLIENT STORIES">
+      <div class="vtesti">
+        <div class="vt-head"><p class="label"><i></i>Client stories</p><p class="mono note">Sample video testimonials — placeholders until client videos are recorded.</p></div>
+        <div class="vt-row">
+          <button class="vt" type="button" data-quote="They rebuilt our platform from the ground up. Organic leads doubled in four months, and the whole team finally loves our product." data-name="Sarah Mitchell" data-role="Founder, Belgravia London" data-time="0:48" data-img="1531297484001-80022131f5a1">
+            <span class="vt-media"><img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=600&h=1000&q=75" alt="" loading="lazy"></span>
+            <span class="vt-time mono">0:48</span>
+            <span class="vt-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+            <span class="vt-info"><span class="vt-q">“They rebuilt our platform from the ground up.”</span><b>Sarah Mitchell</b><small>Founder, Belgravia London</small></span>
+          </button>
+          <button class="vt" type="button" data-quote="Weekly demos, zero surprises. We shipped our MVP in six weeks and raised our seed round off the back of it." data-name="Daniel Reyes" data-role="Head of Growth, BetterHomes" data-time="1:12" data-img="1460925895917-afdab827c52f">
+            <span class="vt-media"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&h=1000&q=75" alt="" loading="lazy"></span>
+            <span class="vt-time mono">1:12</span>
+            <span class="vt-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+            <span class="vt-info"><span class="vt-q">“Weekly demos, zero surprises.”</span><b>Daniel Reyes</b><small>Head of Growth, BetterHomes</small></span>
+          </button>
+          <button class="vt" type="button" data-quote="The AI assistant they built handles most of our support tickets now. It paid for itself in the first quarter." data-name="Aisha Khan" data-role="CTO, CryptoSouk" data-time="0:56" data-img="1550751827-4bd374c3f58b">
+            <span class="vt-media"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&h=1000&q=75" alt="" loading="lazy"></span>
+            <span class="vt-time mono">0:56</span>
+            <span class="vt-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+            <span class="vt-info"><span class="vt-q">“The AI assistant they built handles most of our support tickets now.”</span><b>Aisha Khan</b><small>CTO, CryptoSouk</small></span>
+          </button>
+          <button class="vt" type="button" data-quote="Our app went from two stars to four point eight. The design system they built makes every release feel effortless." data-name="Marcus Lee" data-role="Product Lead, Polly" data-time="1:05" data-img="1512941937669-90a1b58e7e9c">
+            <span class="vt-media"><img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=600&h=1000&q=75" alt="" loading="lazy"></span>
+            <span class="vt-time mono">1:05</span>
+            <span class="vt-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+            <span class="vt-info"><span class="vt-q">“Our app went from two stars to four point eight.”</span><b>Marcus Lee</b><small>Product Lead, Polly</small></span>
+          </button>
+        </div>
+      </div>
     </section>
 
     <!-- WORK -->
     <section class="s-work" id="work" data-blob="1.2,1.55,0.62" data-label="WORK">
-      <header class="sec-head">
-        <p class="label"><i></i>Featured work</p>
-        <div class="sec-head-row"><h2 class="display" data-split>Selected work</h2><span class="count display">(08)</span></div>
-      </header>
-
-      <a class="feature" href="/work/belgravia-london">
-        <figure class="media brackets" data-reveal>
-          <img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=2000&q=80" alt="Belgravia London — luxury real estate website" loading="lazy" data-parallax>
-          <span class="scan" aria-hidden="true"></span>
-        </figure>
-        <div class="feature-info">
-          <p class="mono kick">01 — Luxury real estate</p>
-          <h3 class="display" data-split>Belgravia London</h3>
-          <p class="mono tags-line">Web Design · Development · SEO</p>
-          <p class="feature-desc">A cinematic digital home for prime London property — where architecture leads and the interface steps aside.</p>
-          <span class="round-arrow" aria-hidden="true">↗</span>
-        </div>
-      </a>
-
       <div class="hscroll" id="hscroll">
         <div class="hscroll-track" id="hscrollTrack">
           <div class="hs-intro">
             <p class="label"><i></i>Recent launches</p>
             <h3 class="display">Built to perform. <em>Designed to be felt.</em></h3>
           </div>
-          <a class="card" href="/work/betterhomes"><figure class="media brackets"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1400&q=80" alt="BetterHomes — property platform" loading="lazy"><span class="scan"></span></figure>
-            <div class="card-info"><p class="mono kick">02 — Property platform</p><h3 class="display">BetterHomes</h3><p class="mono tags-line">Product Design · Development</p></div><span class="round-arrow">↗</span></a>
-          <a class="card" href="/work/cryptosouk"><figure class="media brackets"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1400&q=80" alt="CryptoSouk — fintech" loading="lazy"><span class="scan"></span></figure>
-            <div class="card-info"><p class="mono kick">03 — Fintech</p><h3 class="display">CryptoSouk</h3><p class="mono tags-line">UX/UI · Web App · Branding</p></div><span class="round-arrow">↗</span></a>
-          <a class="card" href="/work/the-bagel-shak"><figure class="media brackets"><img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1400&q=80" alt="The Bagel Shak — food and beverage" loading="lazy"><span class="scan"></span></figure>
-            <div class="card-info"><p class="mono kick">04 — Food &amp; beverage</p><h3 class="display">The Bagel Shak</h3><p class="mono tags-line">Branding · Packaging · E-commerce</p></div><span class="round-arrow">↗</span></a>
-          <a class="card" href="/work/bike-store"><figure class="media brackets"><img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1400&q=80" alt="Bike Store — retail e-commerce" loading="lazy"><span class="scan"></span></figure>
-            <div class="card-info"><p class="mono kick">05 — Retail e-commerce</p><h3 class="display">Bike Store</h3><p class="mono tags-line">Shopify Plus · CRO</p></div><span class="round-arrow">↗</span></a>
-          <a class="card" href="/work/polly"><figure class="media brackets"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=80" alt="Polly — SaaS" loading="lazy"><span class="scan"></span></figure>
-            <div class="card-info"><p class="mono kick">06 — SaaS</p><h3 class="display">Polly</h3><p class="mono tags-line">Product Design · Front-end</p></div><span class="round-arrow">↗</span></a>
-          <a class="card card-light" href="/work/upmatch"><figure class="media brackets"><img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1400&q=80" alt="Upmatch — recruitment" loading="lazy"><span class="scan"></span></figure>
-            <div class="card-info"><p class="mono kick">07 — Recruitment</p><h3 class="display">Upmatch</h3><p class="mono tags-line">Web Platform · SEO · PPC</p></div><span class="round-arrow">↗</span></a>
-          <a class="card" href="/work/aureum"><figure class="media brackets"><img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=1400&q=80" alt="Aureum — fine jewellery" loading="lazy"><span class="scan"></span></figure>
-            <div class="card-info"><p class="mono kick">08 — Fine jewellery</p><h3 class="display">Aureum</h3><p class="mono tags-line">Shopify Plus · Art Direction · Email</p></div><span class="round-arrow">↗</span></a>
+          <a class="card" href="https://sybrid.com/syvox" target="_blank" rel="noopener"><figure class="media brackets"><img src="/assets/work/syvox.jpg" alt="SYVOX 2.0 by Sybrid" loading="lazy"><span class="scan"></span></figure>
+            <div class="card-info"><p class="mono kick">01 — Unified communications</p><h3 class="display">SYVOX 2.0</h3><p class="mono tags-line">Contact Center · Omni-channel · AI Automation</p></div><span class="round-arrow">↗</span></a>
+          <a class="card" href="https://sybrid.com/syhox" target="_blank" rel="noopener"><figure class="media brackets"><img src="/assets/work/syhox.jpg" alt="SYHOX by Sybrid" loading="lazy"><span class="scan"></span></figure>
+            <div class="card-info"><p class="mono kick">02 — Cloud IP PBX</p><h3 class="display">SYHOX</h3><p class="mono tags-line">IP PBX · Secure Cloud · Call Centers</p></div><span class="round-arrow">↗</span></a>
+          <a class="card" href="https://sybrid.com/sydesk" target="_blank" rel="noopener"><figure class="media brackets"><img src="/assets/work/sydesk.jpg" alt="SYDESK by Sybrid" loading="lazy"><span class="scan"></span></figure>
+            <div class="card-info"><p class="mono kick">03 — Helpdesk & CRM</p><h3 class="display">SYDESK</h3><p class="mono tags-line">Helpdesk · Asset Management · Complaints</p></div><span class="round-arrow">↗</span></a>
+          <a class="card" href="https://sybrid.com/syforce" target="_blank" rel="noopener"><figure class="media brackets"><img src="/assets/work/syforce.jpg" alt="SyForce by Sybrid" loading="lazy"><span class="scan"></span></figure>
+            <div class="card-info"><p class="mono kick">04 — AI human capital management</p><h3 class="display">SyForce</h3><p class="mono tags-line">HCM · Hiring · Performance</p></div><span class="round-arrow">↗</span></a>
+          <a class="card" href="https://sybrid.com/syshield" target="_blank" rel="noopener"><figure class="media brackets"><img src="/assets/work/syshield.jpg" alt="SyShield by Sybrid" loading="lazy"><span class="scan"></span></figure>
+            <div class="card-info"><p class="mono kick">05 — AI compliance readiness</p><h3 class="display">SyShield</h3><p class="mono tags-line">Risk · Compliance · Governance</p></div><span class="round-arrow">↗</span></a>
           <div class="hs-outro">
-            <p>Eight brands, eight different problems. Yours could be next.</p>
+            <p>Five products, five different problems solved. Yours could be next.</p>
             <a class="link-arrow" href="#contact">Start a project <i>↗</i></a>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- INDUSTRIES -->
+    <section class="s-industries" id="industries" data-blob="2.6,1.5,0.5" data-label="INDUSTRIES">
+      <header class="sec-head">
+        <p class="label"><i></i>Industries we serve</p>
+        <div class="sec-head-row"><h2 class="display" data-split>Built for your world</h2><span class="count display">(06)</span></div>
+      </header>
+      <div class="inds">
+        <article class="ind">
+          <span class="ind-no mono">01</span>
+          <span class="ind-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.3-9.4C1.4 8.2 3.6 4.5 7.2 4.5c2 0 3.6 1.1 4.8 2.8 1.2-1.7 2.8-2.8 4.8-2.8 3.6 0 5.8 3.7 4.5 7.1C19.5 16.4 12 21 12 21Z"/><path d="M3.5 12h4l1.8-3 2.6 6 1.8-3H20"/></svg></span>
+          <h3 class="display">Healthcare</h3>
+          <p>Patient portals, telehealth and HIPAA-minded platforms that make care easier to reach.</p>
+          <ul class="ind-chips mono"><li>Telehealth apps</li><li>Patient portals</li><li>AI triage</li></ul>
+        </article>
+        <article class="ind">
+          <span class="ind-no mono">02</span>
+          <span class="ind-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg></span>
+          <h3 class="display">Fitness & Wellness</h3>
+          <p>Apps and sites that keep members moving — bookings, coaching and progress in one place.</p>
+          <ul class="ind-chips mono"><li>Class booking</li><li>Coaching apps</li><li>Wearable sync</li></ul>
+        </article>
+        <article class="ind">
+          <span class="ind-no mono">03</span>
+          <span class="ind-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M7 21h10M5 7h14M12 5l-7 2M12 5l7 2"/><path d="M5 7l-3 7a3 3 0 0 0 6 0Z"/><path d="M19 7l-3 7a3 3 0 0 0 6 0Z"/></svg></span>
+          <h3 class="display">Law Firms</h3>
+          <p>Websites and client tools that win trust, generate leads and cut admin for legal teams.</p>
+          <ul class="ind-chips mono"><li>Lead-gen sites</li><li>Client intake</li><li>Document AI</li></ul>
+        </article>
+        <article class="ind">
+          <span class="ind-no mono">04</span>
+          <span class="ind-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V10l7-6 7 6v11"/><path d="M9.5 21v-6h5v6"/><path d="M9 11h.01M15 11h.01"/></svg></span>
+          <h3 class="display">Real Estate</h3>
+          <p>Listings, virtual tours and CRMs that turn browsers into buyers and tenants.</p>
+          <ul class="ind-chips mono"><li>Property portals</li><li>Virtual tours</li><li>Agent CRM</li></ul>
+        </article>
+        <article class="ind">
+          <span class="ind-no mono">05</span>
+          <span class="ind-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14l-1.2 12.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8Z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></svg></span>
+          <h3 class="display">E-commerce & Retail</h3>
+          <p>Stores built to convert, with fast checkout, smart search and inventory that stays in sync.</p>
+          <ul class="ind-chips mono"><li>Shopify Plus</li><li>Headless stores</li><li>CRO</li></ul>
+        </article>
+        <article class="ind">
+          <span class="ind-no mono">06</span>
+          <span class="ind-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h18"/><path d="M6 16V11M10 16V7M14 16v-6M18 16V5"/><path d="M5 8l5-4 4 3 5-4"/></svg></span>
+          <h3 class="display">Finance & Fintech</h3>
+          <p>Secure dashboards, payments and trading tools with compliance designed in from day one.</p>
+          <ul class="ind-chips mono"><li>Payments</li><li>Dashboards</li><li>KYC flows</li></ul>
+        </article>
       </div>
     </section>
 
@@ -345,11 +432,23 @@
     </section>
 
     <!-- PHILOSOPHY -->
-    <section class="s-philosophy" id="about" data-blob="-2.6,-0.6,1.0" data-label="ABOUT">
-      <p class="label"><i></i>Philosophy</p>
-      <p class="philo-text display" data-words>Creativity, technology and strategy. <span data-tail>One team. Zero hand-offs.</span></p>
-      <figure class="media brackets philo-img philo-img-a" data-reveal><img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80" alt="Team working together on laptops" loading="lazy" data-parallax><span class="scan"></span></figure>
-      <figure class="media brackets philo-img philo-img-b" data-reveal><img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1200&q=80" alt="Code on a screen" loading="lazy" data-parallax><span class="scan"></span></figure>
+    <section class="s-partners" id="about" data-blob="2.5,1.3,0.7" data-label="PARTNERS">
+      <p class="label"><i></i>Our partners</p>
+      <p class="partners-text display" data-words>Three companies. <span data-tail>One ecosystem.</span></p>
+      <div class="partners">
+        <div class="partner">
+          <figure class="media partner-img" data-reveal><img src="/assets/partners/canvas-digital.jpg" alt="Canvas Digital banner" width="1672" height="941" loading="lazy"></figure>
+          <div class="partner-meta"><span class="mono">01</span><b class="display">Canvas Digital</b><small>Creative & digital studio</small></div>
+        </div>
+        <a class="partner" href="https://sybrid.com/" target="_blank" rel="noopener">
+          <figure class="media partner-img" data-reveal><img src="/assets/partners/sybrid.jpg" alt="Sybrid banner" width="1672" height="941" loading="lazy"></figure>
+          <div class="partner-meta"><span class="mono">02</span><b class="display">Sybrid</b><small>A technology solutions company</small><span class="partner-go mono">Visit &#8599;</span></div>
+        </a>
+        <a class="partner" href="https://www.nextappinc.com/" target="_blank" rel="noopener">
+          <figure class="media partner-img" data-reveal><img src="/assets/partners/nextapp.jpg" alt="Next App banner" width="1672" height="941" loading="lazy"></figure>
+          <div class="partner-meta"><span class="mono">03</span><b class="display">Next App</b><small>Mobile apps, web & software</small><span class="partner-go mono">Visit &#8599;</span></div>
+        </a>
+      </div>
     </section>
 
     <!-- NUMBERS -->
@@ -368,28 +467,6 @@
       <p class="label"><i></i>Brands we've moved</p>
       <div class="marquee" data-dir="1"><div class="marquee-track display"><span>Belgravia London</span><b>✦</b><span>BetterHomes</span><b>✦</b><span>CryptoSouk</span><b>✦</b><span>The Bagel Shak</span><b>✦</b><span>Bike Store</span><b>✦</b><span>Polly</span><b>✦</b><span>Upmatch</span><b>✦</b><span>Aureum</span><b>✦</b></div></div>
       <div class="marquee marquee-outline" data-dir="-1"><div class="marquee-track display"><span>Aureum</span><b>✦</b><span>Upmatch</span><b>✦</b><span>Polly</span><b>✦</b><span>Bike Store</span><b>✦</b><span>The Bagel Shak</span><b>✦</b><span>CryptoSouk</span><b>✦</b><span>BetterHomes</span><b>✦</b><span>Belgravia London</span><b>✦</b></div></div>
-    </section>
-
-    <!-- TESTIMONIALS -->
-    <section class="s-words" id="words" data-blob="-2.8,1.1,0.9" data-label="KIND WORDS">
-      <p class="label"><i></i>Kind words</p>
-      <p class="mono note">Sample testimonials — placeholders until real client quotes are approved.</p>
-      <div class="quotes" id="quotes" aria-live="polite">
-        <figure class="quote is-on"><blockquote class="display">“They rebuilt our site from the ground up and organic leads doubled in four months. The craft is obsessive.”</blockquote>
-          <figcaption><span class="avatar">R</span><span><b>Sample Client</b><em>Marketing Director, Real estate brand</em></span></figcaption></figure>
-        <figure class="quote"><blockquote class="display">“Our replatform went live with zero downtime. Conversion is up and the store finally feels like us.”</blockquote>
-          <figcaption><span class="avatar">J</span><span><b>Sample Client</b><em>Founder, Jewellery brand</em></span></figcaption></figure>
-        <figure class="quote"><blockquote class="display">“From logo to packaging they gave us a personality customers recognise from across the street.”</blockquote>
-          <figcaption><span class="avatar">H</span><span><b>Sample Client</b><em>Owner, Hospitality group</em></span></figcaption></figure>
-        <figure class="quote"><blockquote class="display">“Weekly demos, straight answers and a product our users love. It feels like one team.”</blockquote>
-          <figcaption><span class="avatar">F</span><span><b>Sample Client</b><em>Head of Product, Fintech startup</em></span></figcaption></figure>
-      </div>
-      <div class="quote-nav">
-        <span class="mono" id="quoteCount">01 / 04</span>
-        <i class="quote-bar"><em id="quoteBar"></em></i>
-        <button class="round-btn" id="quotePrev" aria-label="Previous testimonial">←</button>
-        <button class="round-btn" id="quoteNext" aria-label="Next testimonial">→</button>
-      </div>
     </section>
 
     <!-- CONTACT -->
@@ -438,8 +515,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="voice-lines.js?v=16"></script>
-<script src="app.js?v=16"></script>
-<script src="site.js?v=16"></script>
+<script src="voice-lines.js?v=26"></script>
+<script src="app.js?v=37"></script>
+<script src="site.js?v=37"></script>
 </body>
 </html>

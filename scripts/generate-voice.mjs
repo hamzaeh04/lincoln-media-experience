@@ -13,7 +13,7 @@ const src = readFileSync(root + "voice-lines.js", "utf8");
 const LINES = JSON.parse(src.slice(src.indexOf("= {") + 2, src.lastIndexOf("}") + 1));
 
 const voice = process.env.VOICE || "af_heart";
-const speed = Number(process.env.SPEED || 0.92);
+const speed = Number(process.env.SPEED || 1.15);
 const only = process.env.ONLY ? new Set(process.env.ONLY.split(",")) : null;
 const outDir = root + "assets/voice/";
 mkdirSync(outDir, { recursive: true });

@@ -11,7 +11,7 @@
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
   // Bump when the recorded voice clips are regenerated so browsers fetch the new audio
-  const VOICE_VERSION = 4;
+  const VOICE_VERSION = 6;
   const clipUrl = (key) => `assets/voice/${key}.mp3?v=${VOICE_VERSION}`;
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const LINES = window.VOICE_LINES || {};
@@ -303,7 +303,11 @@
   const anchor = { x: 0, y: 0, s: 1 }, anchorNow = { x: 0, y: 0, s: 1 };
   let spinKick = 0;
 
-  const palette = { ai: ["#36e4d0", "#7b5bff"], saas: ["#5ab0ff", "#36e4d0"], mobile: ["#ffb35c", "#ff5c8a"], unsure: ["#36e4d0", "#3b5bff"] };
+  const palette = { ai: ["#36e4d0", "#7b5bff"], saas: ["#5ab0ff", "#36e4d0"], mobile: ["#ffb35c", "#ff5c8a"], unsure: ["#36e4d0", "#3b5bff"],
+    design: ["#ff5cd6", "#7b5bff"], marketing: ["#ffd25c", "#ff5c8a"], web: ["#5ab0ff", "#7b5bff"], ecom: ["#5cffa8", "#36e4d0"],
+    chatbot: ["#36e4d0", "#ff5cd6"], automation: ["#ffb35c", "#36e4d0"], crm: ["#7b5bff", "#5ab0ff"] };
+  // Orb shape for the plan screen, per build type
+  const SHAPES = { ai: "neural", chatbot: "neural", automation: "neural", saas: "grid", web: "grid", ecom: "grid", crm: "grid", mobile: "phone" };
   let colTarget = palette.unsure;
   const tint = (key) => (colTarget = palette[key] || palette.unsure);
   // Each question gets its own colour; the orb, waves, background and HUD all fade into it
@@ -404,6 +408,21 @@
     }
     // Hover tick: tiny dry click
     const tick = () => { if (on) clack(ctx.currentTime, 3200, 0.08, 0.02); };
+    // Slider swipe: a short airy swish that sweeps in the swipe direction, plus a soft glassy tap as the card lands
+    function swipe(dir = 1) {
+      if (!on) return;
+      const t = ctx.currentTime, len = 0.22, n = noise(len), bp = ctx.createBiquadFilter(), g = ctx.createGain(), pan = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+      bp.type = "bandpass"; bp.Q.value = 1.4;
+      bp.frequency.setValueAtTime(dir > 0 ? 700 : 2600, t); bp.frequency.exponentialRampToValueAtTime(dir > 0 ? 2600 : 700, t + len);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.16, t + 0.05); g.gain.exponentialRampToValueAtTime(0.0001, t + len);
+      let node = n.connect(bp).connect(g);
+      if (pan) { pan.pan.setValueAtTime(-0.5 * dir, t); pan.pan.linearRampToValueAtTime(0.5 * dir, t + len); node = node.connect(pan); }
+      node.connect(ctx.destination); n.start(t); n.stop(t + len);
+      const o = ctx.createOscillator(), og = ctx.createGain();
+      o.type = "sine"; o.frequency.setValueAtTime(dir > 0 ? 1180 : 990, t + 0.1);
+      og.gain.setValueAtTime(0.0001, t + 0.1); og.gain.exponentialRampToValueAtTime(0.035, t + 0.11); og.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
+      o.connect(og).connect(ctx.destination); o.start(t + 0.1); o.stop(t + 0.32);
+    }
     // "Thinking": quiet data ticks over a low pulse; returns a stop function
     function processing() {
       if (!on) return () => {};
@@ -426,7 +445,7 @@
         hum.stop(t + 0.3); lfo.stop(t + 0.3);
       };
     }
-    return { set, blip, whoosh, chime, submit, tick, processing, get on() { return on; }, get ctx() { return ctx; } };
+    return { set, blip, whoosh, chime, submit, tick, swipe, processing, get on() { return on; }, get ctx() { return ctx; } };
   })();
 
   /* =====================================================================
@@ -527,7 +546,7 @@
         const { id, type, text } = e.data;
         try {
           if (type === "load") tts = tts || await KokoroTTS.from_pretrained("onnx-community/Kokoro-82M-v1.0-ONNX", { dtype: "q8", device: "wasm" });
-          if (type === "say") { const a = await tts.generate(text, { voice: "af_heart", speed: 0.92 }); self.postMessage({ id, ok: true, blob: a.toBlob() }); return; }
+          if (type === "say") { const a = await tts.generate(text, { voice: "af_heart", speed: 1.15 }); self.postMessage({ id, ok: true, blob: a.toBlob() }); return; }
           self.postMessage({ id, ok: true });
         } catch (err) { self.postMessage({ id, ok: false }); }
       };`;
@@ -640,9 +659,9 @@
     const my = ++flow;
     voice.stop();
     const step = show(name);
-    $("#skipIntro").hidden = name !== "intro";
+    paintSkip();
     if (name === "reading") morph("helix");
-    else if (name === "result") morph({ ai: "neural", saas: "grid", mobile: "phone" }[answers.build] || "orb");
+    else if (name === "result") morph(SHAPES[answers.build] || "orb");
     else morph("orb");
 
     if (name === "intro") return runIntro(my, step);
@@ -685,7 +704,6 @@
       await wait(sfx.on ? 260 : 650); if (my !== flow) return;
     }
     step.classList.add("ready");
-    $("#skipIntro").hidden = true;
   }
 
   // The guide replies to an answer, then moves to the next question
@@ -709,7 +727,18 @@
   }
   $("#enterSound").addEventListener("click", () => startExperience(true));
   $("#enterSilent").addEventListener("click", () => startExperience(false));
-  $("#skipIntro").addEventListener("click", () => enter("name"));
+  // Always on screen. Skipping (at any point) removes the talking guide completely and opens the
+  // studio site at its hero ("01 / HOME"); scrolling up can't bring the guide back (until a reload).
+  $("#skipIntro").addEventListener("click", () => {
+    ++flow; voice.stop();
+    document.body.classList.add("skipped");   // CSS hides the whole guided experience
+    $(".hud-ring").style.opacity = "";
+    unlockSite();
+    window.LM.siteMode(true);
+    scrollTo(0, 0);
+    setTimeout(() => { if (window.ScrollTrigger) ScrollTrigger.refresh(); if (window.LMSite) window.LMSite.scrollTo(0, true); }, 300);
+  });
+  function paintSkip() { $("#skipIntro").textContent = stepName === "gate" || stepName === "intro" ? "SKIP INTRO →" : "SKIP TO WEBSITE →"; }
   $("[data-begin]").addEventListener("click", () => enter("name"));
 
   // Start voicing "Nice to meet you, <name>" as soon as the visitor pauses typing
@@ -757,19 +786,82 @@
   });
 
   const NEXT = { build: "stage", stage: "priority", priority: "timeline", timeline: "reading" };
+  /* Options sit on a curved, neon slider: the centre card is in focus, the rest bend away along an arc.
+     Browse with the arrows, drag/swipe, the mouse wheel or ← →; click a card (or press Enter) to choose. */
+  const sliders = new Map();
   $$(".choices").forEach((group) => {
-    const key = group.dataset.key;
-    $$("button", group).forEach((btn) => {
-      btn.addEventListener("mouseenter", () => sfx.tick());
-      btn.addEventListener("click", () => {
-        if (!btn.closest(".step").classList.contains("ready")) return;
-        sfx.submit();
-        $$("button", group).forEach((b) => b.classList.remove("picked"));
-        btn.classList.add("picked");
-        answers[key] = btn.dataset.value;
-        setTimeout(() => reply(`ack-${key}-${btn.dataset.value}`, NEXT[key]), 350);
+    const key = group.dataset.key, btns = $$("button", group);
+    const track = document.createElement("div"); track.className = "arc-track";
+    btns.forEach((b) => track.appendChild(b));
+    const hint = Object.assign(document.createElement("p"), { className: "mono arc-hint", innerHTML: "SWIPE <b>&larr; &rarr;</b> &nbsp;·&nbsp; CLICK TO CHOOSE" });
+    group.classList.add("arc");
+    group.append(track, hint);
+
+    let active = Math.floor((btns.length - 1) / 2), dragX = 0;
+    const layout = () => {
+      // Cards sit on a cylinder: the centre faces you, neighbours turn and fall back into depth
+      const small = innerWidth < 700, step = small ? 30 : 22, R = small ? 400 : 720;
+      btns.forEach((b, i) => {
+        const d = i - active - dragX, ad = Math.abs(d), max = small ? 1.6 : 2.6;
+        b.style.transform = `translate(-50%, 0) translateZ(${-R}px) rotateY(${d * step}deg) translateZ(${R}px)`;
+        b.style.opacity = ad > max ? 0 : Math.max(0.15, 1 - ad * 0.32);
+        b.style.zIndex = 100 - Math.round(ad * 10);
+        b.style.pointerEvents = ad > max ? "none" : "";
+        b.classList.toggle("is-center", Math.round(d) === 0);
+        b.tabIndex = i === active ? 0 : -1;
       });
+    };
+    const go = (i, quiet) => {
+      const n = Math.max(0, Math.min(btns.length - 1, i));
+      if (n !== active && !quiet) sfx.swipe(Math.sign(n - active));
+      active = n; layout();
+    };
+    const pick = (i) => {
+      if (!group.closest(".step").classList.contains("ready") || group.dataset.locked) return;
+      go(i, true);
+      const btn = btns[i];
+      group.dataset.locked = "1";
+      sfx.submit();
+      btns.forEach((b) => b.classList.remove("picked"));
+      btn.classList.add("picked");
+      answers[key] = btn.dataset.value;
+      setTimeout(() => { delete group.dataset.locked; reply(`ack-${key}-${btn.dataset.value}`, NEXT[key]); }, 450);
+    };
+
+    // Drag / swipe (a real drag never counts as a click)
+    let startX = null, moved = false;
+    let dragOver = 0;
+    track.addEventListener("pointerdown", (e) => { startX = e.clientX; moved = false; dragOver = active; group.classList.add("dragging"); });
+    addEventListener("pointermove", (e) => {
+      if (startX === null) return;
+      const dx = e.clientX - startX, gap = innerWidth < 700 ? 200 : 300;
+      if (Math.abs(dx) > 6) moved = true;
+      dragX = Math.max(-active - 0.4, Math.min(btns.length - 1 - active + 0.4, -dx / gap));
+      const over = Math.round(active + dragX);
+      if (over !== dragOver) { if (over >= 0 && over < btns.length) sfx.swipe(Math.sign(over - dragOver)); dragOver = over; }
+      layout();
     });
+    addEventListener("pointerup", () => {
+      if (startX === null) return;
+      startX = null; group.classList.remove("dragging");
+      const target = Math.round(active + dragX); dragX = 0; go(target, true);
+    });
+    btns.forEach((b, i) => b.addEventListener("click", (e) => { if (moved) { e.preventDefault(); moved = false; return; } pick(i); }));
+    btns.forEach((b, i) => b.addEventListener("mouseenter", () => { if (i !== active) b.classList.add("peek"); }));
+    btns.forEach((b) => b.addEventListener("mouseleave", () => b.classList.remove("peek")));
+
+    // Mouse wheel / trackpad scrolls through the options
+    let wheelAcc = 0, wheelT = 0;
+    group.addEventListener("wheel", (e) => {
+      const v = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      e.preventDefault(); wheelAcc += v;
+      const now = performance.now();
+      if (Math.abs(wheelAcc) > 40 && now - wheelT > 160) { go(active + Math.sign(wheelAcc)); wheelAcc = 0; wheelT = now; }
+    }, { passive: false });
+
+    addEventListener("resize", layout);
+    layout();
+    sliders.set(group, { go: (d) => go(active + d), pick: () => pick(active), pickAt: (i) => i < btns.length && pick(i), reset: () => { active = Math.floor((btns.length - 1) / 2); layout(); } });
   });
 
   addEventListener("keydown", (e) => {
@@ -779,11 +871,13 @@
     if (e.key === "Enter") {
       if (stepName === "gate") { e.preventDefault(); startExperience(true); }
       else if (stepName === "intro") { e.preventDefault(); enter("name"); }
+      else { const g = $(".choices", step), sl = g && sliders.get(g); if (sl) { e.preventDefault(); sl.pick(); } }
       return;
     }
-    const idx = "abcd".indexOf(e.key.toLowerCase());
-    const group = $(".choices", step);
-    if (group && idx > -1 && step.classList.contains("ready")) $$("button", group)[idx]?.click();
+    const group = $(".choices", step), sl = group && sliders.get(group);
+    if (!sl) return;
+    if (e.key === "ArrowLeft") { e.preventDefault(); sl.go(-1); }
+    else if (e.key === "ArrowRight") { e.preventDefault(); sl.go(1); }
   });
 
   /* ---------- plan generation ---------- */
@@ -792,6 +886,13 @@
       ai: { title: "The Intelligence Builder", stack: ["Custom LLM assistant trained on your data", "Retrieval (RAG) over docs, CRM and tickets", "Agent workflows wired into your tools", "Evaluation + guardrails dashboard"] },
       saas: { title: "The Platform Architect", stack: ["Multi-tenant web platform", "Subscription billing and plans", "Admin console and analytics", "Public API and integrations"] },
       mobile: { title: "The Pocket Pioneer", stack: ["iOS + Android app (React Native or Flutter)", "Design system tuned for touch", "Push, offline mode and analytics", "App Store + Google Play launch"] },
+      design: { title: "The Brand Visionary", stack: ["Brand identity, logo and visual language", "UX research and user journeys", "UI design system in Figma", "Motion and interaction guidelines"] },
+      marketing: { title: "The Growth Engine", stack: ["Technical SEO audit and fixes", "Content and keyword strategy", "Paid social and search campaigns", "Analytics and conversion tracking"] },
+      web: { title: "The Digital Storefront", stack: ["Fast, responsive website or web app", "Headless CMS your team can edit", "SEO-ready structure and performance", "Analytics, forms and integrations"] },
+      ecom: { title: "The Commerce Captain", stack: ["Shopify or custom storefront", "Payments, shipping and inventory sync", "Conversion-focused product pages", "Email flows and abandoned-cart recovery"] },
+      chatbot: { title: "The Agent Maker", stack: ["AI chatbot trained on your content", "Agent actions wired into your tools", "Website, WhatsApp and Slack channels", "Conversation analytics and guardrails"] },
+      automation: { title: "The Time Saver", stack: ["Map and prioritise manual workflows", "Integrations between your apps (APIs)", "AI steps for documents and email", "Monitoring, alerts and audit trail"] },
+      crm: { title: "The Command Center", stack: ["Custom CRM tailored to your pipeline", "Real-time dashboards and reports", "Roles, permissions and audit log", "Integrations with email, billing and ads"] },
       unsure: { title: "The Open Horizon", stack: ["Discovery sprint to pick the right product", "Clickable prototype in two weeks", "Technical roadmap and estimate", "A build partner for what follows"] },
     },
     stage: {
@@ -837,6 +938,29 @@
     return localPlan(a);
   }
 
+  /* Cost estimate (USD): a base range per build type, adjusted for stage, priority and timeline */
+  const COST = {
+    base: { design: [6, 14], marketing: [5, 12], web: [8, 20], ecom: [14, 32], saas: [35, 85], ai: [30, 75], mobile: [25, 60], chatbot: [10, 26], automation: [8, 22], crm: [20, 48], unsure: [10, 25] },
+    team: { design: 3, marketing: 3, web: 3, ecom: 4, saas: 6, ai: 5, mobile: 5, chatbot: 4, automation: 3, crm: 5, unsure: 3 },
+    stage: { idea: 1, prototype: 0.85, live: 0.95, rebuild: 1.15 },
+    priority: { speed: 1, scale: 1.15, experience: 1.1, automation: 1.05 },
+    timeline: { "6w": 1.25, "3m": 1, "6m": 1.05, flex: 0.95 },
+    split: [["Discover", 0.1], ["Design", 0.2], ["Build", 0.55], ["Launch & QA", 0.15]],
+  };
+  function estimate(a) {
+    const [lo, hi] = COST.base[a.build] || COST.base.unsure;
+    const m = (COST.stage[a.stage] || 1) * (COST.priority[a.priority] || 1) * (COST.timeline[a.timeline] || 1);
+    const r = (v) => Math.max(3, Math.round(v * m)) * 1000;
+    const low = r(lo), high = Math.max(r(hi), low + 2000);
+    return { low, high, team: (COST.team[a.build] || 3) + (a.timeline === "6w" ? 1 : 0), weeks: LIB.timeline[a.timeline] || 12 };
+  }
+  const money = (v) => "$" + (v >= 1000 ? Math.round(v / 1000) + "k" : v);
+  function countUp(el, to, fmt, ms = 1400) {
+    if (reduced) { el.textContent = fmt(to); return; }
+    const t0 = performance.now();
+    (function f(now) { const k = Math.min(1, (now - t0) / ms), e = 1 - Math.pow(1 - k, 3); el.textContent = fmt(to * e); if (k < 1) requestAnimationFrame(f); })(t0);
+  }
+
   let plan = null;
   async function runReading(my, step) {
     setStatus("ANALYZING");
@@ -855,8 +979,31 @@
     const p = plan || localPlan(answers);
     $("#archetype").textContent = p.archetype;
     typeInto($("#resultLede"), p.lede);
-    $("#resultStack").replaceChildren(...p.stack.map((s) => Object.assign(document.createElement("li"), { textContent: s })));
-    $("#resultPlan").replaceChildren(...p.plan.map((s) => Object.assign(document.createElement("li"), { textContent: s })));
+    const est = estimate(answers);
+    $("#resultId").textContent = "PLAN LM-" + String(Math.floor(1000 + Math.random() * 9000));
+    countUp($("#costLow"), est.low, (v) => money(Math.round(v / 1000) * 1000));
+    countUp($("#costHigh"), est.high, (v) => money(Math.round(v / 1000) * 1000));
+    $("#costNote").textContent = answers.build === "marketing" ? "USD · first 3 months" : "USD · one-time build";
+    countUp($("#statWeeks"), est.weeks, (v) => Math.round(v) + " wks", 1100);
+    countUp($("#statTeam"), est.team, (v) => String(Math.round(v)), 900);
+    countUp($("#statFit"), 92 + Math.floor(Math.random() * 7), (v) => Math.round(v) + "%", 1300);
+    // Budget split by phase
+    const mid = (est.low + est.high) / 2;
+    $("#costBar").replaceChildren(...COST.split.map(([, f], i) => { const d = document.createElement("i"); d.style.setProperty("--w", f * 100 + "%"); d.style.setProperty("--d", i * 0.12 + "s"); return d; }));
+    $("#costLegend").replaceChildren(...COST.split.map(([n, f]) => { const li = document.createElement("li"); li.innerHTML = `<b></b>${n}<span>~${money(Math.round((mid * f) / 1000) * 1000)}</span>`; return li; }));
+    // What we'd build: numbered tiles
+    $("#resultStack").replaceChildren(...p.stack.map((t, i) => { const li = document.createElement("li"); li.style.setProperty("--d", 0.3 + i * 0.08 + "s"); li.innerHTML = `<span class="mono">${String(i + 1).padStart(2, "0")}</span>`; li.append(t); return li; }));
+    // Roadmap: "Weeks 1–2: Discover — detail" → week label, phase name, detail
+    $("#planTitle").textContent = `ROADMAP · ${est.weeks} WEEKS`;
+    $("#resultPlan").replaceChildren(...p.plan.map((t, i) => {
+      const li = document.createElement("li"); li.style.setProperty("--d", 0.4 + i * 0.1 + "s");
+      const c = t.indexOf(":"), when = c > -1 ? t.slice(0, c) : "", rest = c > -1 ? t.slice(c + 1).trim() : t;
+      const [name, ...more] = rest.split(/\s+[—-]\s+/);
+      const w = document.createElement("span"); w.className = "mono"; w.textContent = when;
+      const n = document.createElement("b"); n.textContent = name;
+      const d = document.createElement("small"); d.textContent = more.join(" — ");
+      li.append(w, n, d); return li;
+    }));
     prefillContact();
     sfx.chime();
     setStatus("COMPLETE");
@@ -877,14 +1024,18 @@
     const f = $("#contactForm");
     if (answers.name) f.name.value = answers.name;
     if (answers.email) f.email.value = answers.email;
-    // Whatever they're building, the matching studio service is AI, SaaS & Mobile
-    if (answers.build) f.service.value = "AI, SaaS & Mobile Apps";
+    // Match what they're building to the studio's service list
+    const SERVICE = { web: "Web Development", ecom: "E-commerce Web Development", design: "Digital Branding & Communication", marketing: "Digital Marketing" };
+    if (answers.build) f.service.value = SERVICE[answers.build] || "AI, SaaS & Mobile Apps";
+    // Pre-select the budget range that matches the estimate
+    if (answers.build) { const m = (estimate(answers).low + estimate(answers).high) / 2; f.budget.value = m < 5000 ? "Under $5k" : m < 15000 ? "$5k – $15k" : m < 50000 ? "$15k – $50k" : "$50k+"; }
     if (plan && plan.archetype && !f.message.value) f.message.value = `Hi, I'm ${answers.name || "interested in working together"}. The guide suggested "${plan.archetype}" for my project.`;
   }
 
   $("#restartBtn").addEventListener("click", () => {
     Object.keys(answers).forEach((k) => (answers[k] = ""));
     $$(".picked").forEach((b) => b.classList.remove("picked"));
+    sliders.forEach((sl) => sl.reset());
     $("#nameInput").value = ""; $("#emailInput").value = ""; plan = null; tint("unsure");
     if (window.LMSite) window.LMSite.scrollTo(0); else scrollTo({ top: 0, behavior: "smooth" });
     enter("name");
@@ -904,14 +1055,18 @@
 
   // Deep links from the inner pages (e.g. index.html#services) open the studio site directly,
   // skipping the guided questions. The plan experience is still there at the top of the page.
-  const SITE_IDS = ["manifesto", "work", "services", "process", "about", "numbers", "clients", "words", "contact"];
+  const SITE_IDS = ["stories", "manifesto", "work", "industries", "services", "process", "about", "numbers", "clients", "contact"];
   const deep = location.hash.slice(1);
+  // Always start the guide at the top: don't let the browser restore an old scroll position on reload
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  if (!SITE_IDS.includes(deep)) { scrollTo(0, 0); addEventListener("load", () => { if (document.body.classList.contains("locked")) scrollTo(0, 0); }); }
   if (SITE_IDS.includes(deep)) {
     $(".hud-ring").style.opacity = "";
     unlockSite();
     // site.js loads after this file, so wait until both are ready
     addEventListener("DOMContentLoaded", () => {
-      const el = document.getElementById(deep);
+      // the old #manifesto section was replaced by client stories
+      const el = document.getElementById(deep === "manifesto" ? "stories" : deep);
       if (window.LMSite) window.LMSite.goTo(el); else el.scrollIntoView();
     });
   }
@@ -948,7 +1103,7 @@
       if (on) { morph("orb"); colTarget = palette.unsure; }
       else {
         anchor.x = 0; anchor.y = 0; anchor.s = 1;
-        morph(stepName === "result" ? ({ ai: "neural", saas: "grid", mobile: "phone" }[answers.build] || "orb") : "orb");
+        morph(stepName === "result" ? (SHAPES[answers.build] || "orb") : "orb");
         colTarget = stepName === "result" ? (palette[answers.build] || palette.unsure) : (STEP_COLORS[stepName] || palette.unsure);
       }
     },

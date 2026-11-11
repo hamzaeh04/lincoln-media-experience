@@ -3,7 +3,7 @@
 // If the key is missing or the call fails, the front end falls back to its built-in plan.
 
 const ALLOWED = {
-  build: ["ai", "saas", "mobile", "unsure"],
+  build: ["ai", "saas", "mobile", "web", "ecom", "chatbot", "automation", "crm", "design", "marketing", "unsure"],
   stage: ["idea", "prototype", "live", "rebuild"],
   priority: ["speed", "scale", "experience", "automation"],
   timeline: ["6w", "3m", "6m", "flex"],

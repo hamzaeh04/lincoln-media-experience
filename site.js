@@ -163,9 +163,12 @@
     const show = (i) => {
       if (i === cur) return;
       const dir = i > cur ? 1 : -1, prev = steps[cur], next = steps[i];
-      gsap.to(prev, { autoAlpha: 0, y: -40 * dir, duration: 0.45, ease: "power3.in" });
-      gsap.fromTo(next, { autoAlpha: 0, y: 50 * dir }, { autoAlpha: 1, y: 0, duration: 0.7, ease: "expo.out", delay: 0.15 });
-      gsap.to(num, { yPercent: -110 * dir, duration: 0.3, ease: "power3.in", onComplete: () => { num.textContent = String(i + 1).padStart(2, "0"); gsap.fromTo(num, { yPercent: 110 * dir }, { yPercent: 0, duration: 0.6, ease: "expo.out" }); } });
+      // Stop every running/delayed step animation first, so fast scrolling can never leave two steps on screen
+      steps.forEach((s) => { gsap.killTweensOf(s); if (s !== prev && s !== next) gsap.set(s, { autoAlpha: 0, y: 0 }); });
+      gsap.to(prev, { autoAlpha: 0, y: -40 * dir, duration: 0.3, ease: "power3.in" });
+      gsap.fromTo(next, { autoAlpha: 0, y: 50 * dir }, { autoAlpha: 1, y: 0, duration: 0.6, ease: "expo.out", delay: 0.12 });
+      gsap.killTweensOf(num);
+      gsap.to(num, { yPercent: -110 * dir, duration: 0.25, ease: "power3.in", onComplete: () => { num.textContent = String(i + 1).padStart(2, "0"); gsap.fromTo(num, { yPercent: 110 * dir }, { yPercent: 0, duration: 0.5, ease: "expo.out" }); } });
       steps.forEach((s, k) => s.classList.toggle("is-on", k === i));
       cur = i;
     };
@@ -179,6 +182,52 @@
         },
       });
     });
+  }
+
+  /* ---------- video testimonials: a template player until real client videos exist ---------- */
+  function videoTestimonials(root) {
+    const cards = $$(".vt", root); if (!cards.length) return;
+    const PLAY = '<svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg>', PAUSE = '<svg viewBox="0 0 24 24"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>';
+    const m = document.createElement("div"); m.className = "vt-modal"; m.setAttribute("role", "dialog"); m.setAttribute("aria-modal", "true");
+    m.innerHTML = `<div class="vt-player"><img alt=""><span class="vt-badge mono">SAMPLE · CLIENT VIDEO PLACEHOLDER</span><button class="vt-close" aria-label="Close">×</button>
+      <p class="vt-cap"></p><p class="vt-who"><b></b><small></small></p>
+      <div class="vt-ctrl"><button class="vt-toggle" aria-label="Pause"></button><div class="vt-bar"><i></i></div><span class="vt-clock mono">0:00</span></div></div>`;
+    document.body.appendChild(m);
+    const img = $("img", m), cap = $(".vt-cap", m), bar = $(".vt-bar i", m), clock = $(".vt-clock", m), tog = $(".vt-toggle", m);
+    let raf = 0, t0 = 0, played = 0, playing = false, dur = 1, words = [];
+    const fmt = (s) => Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, "0");
+    const frame = (now) => {
+      const p = Math.min(1, (played + (playing ? (now - t0) / 1000 : 0)) / 12);   // a 12s demo stands in for the clip
+      bar.style.width = p * 100 + "%"; clock.textContent = fmt(p * dur) + " / " + fmt(dur);
+      words.forEach((w, i) => w.classList.toggle("on", i < p * words.length * 1.15));
+      if (p >= 1) { setPlaying(false); played = 0; return; }
+      if (playing) raf = requestAnimationFrame(frame);
+    };
+    const setPlaying = (on) => {
+      const now = performance.now();
+      if (!on && playing) played += (now - t0) / 1000;
+      playing = on; t0 = now; tog.innerHTML = on ? PAUSE : PLAY; tog.setAttribute("aria-label", on ? "Pause" : "Play");
+      cancelAnimationFrame(raf); if (on) raf = requestAnimationFrame(frame);
+    };
+    const open = (card) => {
+      const d = card.dataset; img.src = `https://images.unsplash.com/photo-${d.img}?auto=format&fit=crop&w=800&h=1400&q=75`;
+      cap.innerHTML = ""; words = d.quote.split(" ").map((w) => { const s = document.createElement("span"); s.textContent = w + " "; cap.appendChild(s); return s; });
+      $(".vt-who b", m).textContent = d.name; $(".vt-who small", m).textContent = d.role;
+      const [mm, ss] = d.time.split(":"); dur = +mm * 60 + +ss; played = 0; bar.style.width = "0";
+      m.classList.add("open"); window.LM && window.LM.sfx && window.LM.sfx("select"); setPlaying(true); $(".vt-close", m).focus();
+    };
+    const close = () => { setPlaying(false); m.classList.remove("open"); };
+    cards.forEach((c) => c.addEventListener("click", () => open(c)));
+    tog.addEventListener("click", () => { if (!playing && played === 0) bar.style.width = "0"; setPlaying(!playing); });
+    $(".vt-close", m).addEventListener("click", close);
+    m.addEventListener("click", (e) => { if (e.target === m) close(); });
+    addEventListener("keydown", (e) => { if (e.key === "Escape" && m.classList.contains("open")) close(); });
+  }
+
+  /* ---------- industries: cards rise in, one after another ---------- */
+  function industries(root) {
+    $$(".ind", root).forEach((card, i) => ScrollTrigger.create({ trigger: card, start: "top 90%", once: true,
+      onEnter: () => setTimeout(() => card.classList.add("in"), (i % 3) * 120) }));
   }
 
   /* ---------- numbers ---------- */
@@ -264,13 +313,13 @@
     startLenis();
     // The guided experience sits above the studio site: leaving it switches the 3D scene to "studio" mode
     const exp = $("#experience");
-    if (exp) ScrollTrigger.create({ trigger: exp, start: "bottom 60%", onEnter: () => window.LM && LM.siteMode(true), onLeaveBack: () => window.LM && LM.siteMode(false) });
+    if (exp && !document.body.classList.contains("skipped")) ScrollTrigger.create({ trigger: exp, start: "bottom 60%", onEnter: () => window.LM && LM.siteMode(true), onLeaveBack: () => window.LM && LM.siteMode(false) });
     else if (window.LM) LM.siteMode(true);
     // Pinned sections first, so every trigger further down accounts for their extra scroll length
     work(root); processSteps(root);
     trackSections(root);
     headlines(root); litWords(root); media(root);
-    accordion(root); counters(root); marquees(root); quotes(root);
+    accordion(root); counters(root); marquees(root); quotes(root); videoTestimonials(root); industries(root);
     ScrollTrigger.sort();
     magnetic(); clock();
     // Images load lazily and change heights — re-measure once they arrive
