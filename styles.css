@@ -79,7 +79,7 @@ main { position: relative; z-index: 2; }
 /* ---------- Experience ---------- */
 .experience { min-height: 100vh; min-height: 100svh; display: grid; place-items: center; position: relative; padding: 120px var(--pad); }
 .disclaimer { position: absolute; top: 120px; left: 50%; transform: translateX(-50%); width: min(560px, calc(100% - 32px)); text-align: center; color: var(--mute); line-height: 1.7; }
-.stage { width: min(1000px, 100%); position: relative; min-height: 440px; display: grid; }
+.stage { width: min(1000px, 100%); position: relative; min-height: 440px; display: grid; grid-template-columns: minmax(0, 1fr); }
 .step { grid-area: 1 / 1; align-self: center; text-align: center; opacity: 0; visibility: hidden; transform: translateY(24px); filter: blur(8px); transition: opacity .7s, transform .9s cubic-bezier(.2,.8,.2,1), filter .7s, visibility .7s; }
 .step.is-active { opacity: 1; visibility: visible; transform: none; filter: none; }
 /* The tall plan card must not stretch the stage (and push the other steps down) while it is hidden */
