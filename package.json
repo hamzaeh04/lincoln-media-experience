@@ -3,10 +3,18 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "voice": "node scripts/generate-voice.mjs",
-    "dev": "node server.mjs"
+    "dev": "next dev -p 5178",
+    "build": "next build",
+    "start": "next start -p 5178",
+    "pages": "python3 scripts/build-pages.py && node scripts/html-to-next.mjs",
+    "voice": "node scripts/generate-voice.mjs"
   },
   "devDependencies": {
     "kokoro-js": "^1.2.1"
+  },
+  "dependencies": {
+    "next": "^15.5.29",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
   }
 }

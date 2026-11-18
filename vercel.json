@@ -1,7 +1,4 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": null,
-  "installCommand": "echo 'No install needed: static site + api/plan.js (no dependencies)'",
-  "buildCommand": "",
-  "outputDirectory": "."
+  "framework": "nextjs"
 }

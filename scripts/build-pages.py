@@ -9,6 +9,7 @@ import html
 import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT = os.path.join(ROOT, "legacy")  # source HTML for the Next.js app (see scripts/html-to-next.mjs)
 V = "16"  # cache-busting version for css/js
 UNSPLASH = "https://images.unsplash.com/photo-{id}?auto=format&fit=crop&w={w}&q=80"
 e = html.escape

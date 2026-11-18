@@ -9,13 +9,13 @@ import { mkdirSync, unlinkSync, readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 
 const root = new URL("../", import.meta.url).pathname;
-const src = readFileSync(root + "voice-lines.js", "utf8");
+const src = readFileSync(root + "public/voice-lines.js", "utf8");
 const LINES = JSON.parse(src.slice(src.indexOf("= {") + 2, src.lastIndexOf("}") + 1));
 
 const voice = process.env.VOICE || "af_heart";
 const speed = Number(process.env.SPEED || 1.15);
 const only = process.env.ONLY ? new Set(process.env.ONLY.split(",")) : null;
-const outDir = root + "assets/voice/";
+const outDir = root + "public/assets/voice/";
 mkdirSync(outDir, { recursive: true });
 
 console.log(`Loading Kokoro (voice: ${voice}, speed: ${speed})…`);

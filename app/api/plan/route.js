@@ -1,6 +1,7 @@
-// Vercel serverless function: turns the visitor's answers into a personal build plan with Claude.
+// Turns the visitor's answers into a personal build plan with Claude.
 // Set ANTHROPIC_API_KEY in Vercel → Project → Settings → Environment Variables.
 // If the key is missing or the call fails, the front end falls back to its built-in plan.
+export const dynamic = "force-dynamic";
 
 const ALLOWED = {
   build: ["ai", "saas", "mobile", "web", "ecom", "chatbot", "automation", "crm", "design", "marketing", "unsure"],
@@ -8,12 +9,15 @@ const ALLOWED = {
   priority: ["speed", "scale", "experience", "automation"],
   timeline: ["6w", "3m", "6m", "flex"],
 };
+const json = (body, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
 
-export default async function handler(req, res) {
-  if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
-  if (!process.env.ANTHROPIC_API_KEY) return res.status(503).json({ error: "AI not configured" });
+export async function GET() {
+  return json({ error: "POST only" }, 405);
+}
 
-  const b = req.body || {};
+export async function POST(req) {
+  if (!process.env.ANTHROPIC_API_KEY) return json({ error: "AI not configured" }, 503);
+  const b = await req.json().catch(() => ({}));
   const a = { name: String(b.name || "").replace(/[^\p{L}\p{M} '-]/gu, "").slice(0, 24) };
   for (const k of Object.keys(ALLOWED)) a[k] = ALLOWED[k].includes(b[k]) ? b[k] : "unsure";
 
@@ -25,24 +29,14 @@ Write a short, confident, specific build plan. Return ONLY JSON:
   try {
     const r = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": process.env.ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: process.env.ANTHROPIC_MODEL || "claude-haiku-5-5",
-        max_tokens: 600,
-        messages: [{ role: "user", content: prompt }],
-      }),
+      headers: { "content-type": "application/json", "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" },
+      body: JSON.stringify({ model: process.env.ANTHROPIC_MODEL || "claude-haiku-5-5", max_tokens: 600, messages: [{ role: "user", content: prompt }] }),
     });
     if (!r.ok) throw new Error("upstream " + r.status);
     const data = await r.json();
     const text = data.content?.[0]?.text || "";
-    const json = JSON.parse(text.slice(text.indexOf("{"), text.lastIndexOf("}") + 1));
-    res.setHeader("Cache-Control", "no-store");
-    return res.status(200).json(json);
-  } catch (e) {
-    return res.status(502).json({ error: "AI unavailable" });
+    return json(JSON.parse(text.slice(text.indexOf("{"), text.lastIndexOf("}") + 1)));
+  } catch {
+    return json({ error: "AI unavailable" }, 502);
   }
 }
