@@ -9,7 +9,7 @@ import { mkdirSync, unlinkSync, readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 
 const root = new URL("../", import.meta.url).pathname;
-const src = readFileSync(root + "public/voice-lines.js", "utf8");
+const src = readFileSync(root + "app/_scripts/voice-lines.js", "utf8");
 const LINES = JSON.parse(src.slice(src.indexOf("= {") + 2, src.lastIndexOf("}") + 1));
 
 const voice = process.env.VOICE || "af_heart";

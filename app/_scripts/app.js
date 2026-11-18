@@ -1059,12 +1059,12 @@
   const deep = location.hash.slice(1);
   // Always start the guide at the top: don't let the browser restore an old scroll position on reload
   if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-  if (!SITE_IDS.includes(deep)) { scrollTo(0, 0); addEventListener("load", () => { if (document.body.classList.contains("locked")) scrollTo(0, 0); }); }
+  if (!SITE_IDS.includes(deep)) { scrollTo(0, 0); const top = () => { if (document.body.classList.contains("locked")) scrollTo(0, 0); }; if (document.readyState === "complete") requestAnimationFrame(top); else addEventListener("load", top); }
   if (SITE_IDS.includes(deep)) {
     $(".hud-ring").style.opacity = "";
     unlockSite();
-    // site.js loads after this file, so wait until both are ready
-    addEventListener("DOMContentLoaded", () => {
+    // site.js loads after this file, so wait until both are ready (SiteScripts fires "lm:ready")
+    addEventListener("lm:ready", () => {
       // the old #manifesto section was replaced by client stories
       const el = document.getElementById(deep === "manifesto" ? "stories" : deep);
       if (window.LMSite) window.LMSite.goTo(el); else el.scrollIntoView();

@@ -1,5 +1,5 @@
 // Converts the hand-built HTML pages in legacy/ into content/pages.json, which the Next.js app renders.
-// Each page keeps its exact markup, stylesheets and scripts, so behaviour is identical to the static site.
+// Each page keeps its exact markup, so it looks and behaves exactly like the static site did.
 // Usage: npm run pages   (runs build-pages.py first, then this)
 import { readFileSync, writeFileSync, readdirSync, statSync, mkdirSync } from "node:fs";
 import { join, relative } from "node:path";
@@ -24,12 +24,11 @@ for (const file of walk(legacy).sort()) {
   const bodyOpen = html.match(/<body([^>]*)>/);
   const body = html.slice(html.indexOf(bodyOpen[0]) + bodyOpen[0].length, html.lastIndexOf("</body>"));
   const attr = (n) => (bodyOpen[1].match(new RegExp(`${n}="([^"]*)"`)) || [])[1] || "";
-  // Everything in <head> except what Next.js renders itself (charset, viewport, title, description)
-  const headTags = head
-    .replace(/<meta charset[^>]*>/i, "")
-    .replace(/<meta name="viewport"[^>]*>/i, "")
-    .replace(/<title>[\s\S]*?<\/title>/i, "")
-    .replace(/<meta name="description"[^>]*>/i, "")
+  // Only the page markup is kept: Next.js handles the <head>, the stylesheets (app/_styles, imported by
+  // the layouts), the fonts (next/font) and the scripts (bundled by app/_components/SiteScripts.jsx)
+  const markup = body
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
+    .replace(/<link\b[^>]*>/gi, "")
     .trim();
   const route = "/" + relative(legacy, file).replace(/(^|\/)index\.html$/, "");
   pages[route === "/" ? "/" : route.replace(/\/$/, "")] = {
@@ -37,8 +36,7 @@ for (const file of walk(legacy).sort()) {
     description: decode((head.match(/<meta name="description" content="([^"]*)"/i) || [])[1] || ""),
     bodyClass: attr("class"),
     dataPage: attr("data-page"),
-    head: headTags,
-    body: body.trim(),
+    body: markup,
   };
 }
 mkdirSync(join(root, "content"), { recursive: true });

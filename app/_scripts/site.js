@@ -325,7 +325,8 @@
     // Images load lazily and change heights — re-measure once they arrive
     $$("img", root).forEach((img) => !img.complete && img.addEventListener("load", () => ScrollTrigger.refresh(), { once: true }));
     ScrollTrigger.refresh();
-    window.addEventListener("load", () => ScrollTrigger.refresh());
+    if (document.readyState === "complete") requestAnimationFrame(() => ScrollTrigger.refresh());
+    else window.addEventListener("load", () => ScrollTrigger.refresh());
     // A deep link (index.html#services) waits for the layout to settle, then jumps there
     if (pendingTarget) { const t = pendingTarget; pendingTarget = null; setTimeout(() => scrollTo(t, true), 350); }
   }
